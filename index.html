@@ -6,172 +6,327 @@
 <title>Андрей Ванишевский — питание и похудение без диет</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Onest:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF8F0;
+    --sky:#cfe0e3;        /* блок 2 — утреннее небо */
+    --sky-deep:#bcd1d5;
+    --sand:#EFE8D8;
+    --ink:#22332F;
+    --ink-soft:rgba(34,51,47,.74);
+    --terra:#C2603C;
+    --terra-soft:#D98E6A;
+    --sage:#6b8a5f;
+
+    --display:'Cormorant Garamond',Georgia,serif;
+    --body:'Golos Text',system-ui,sans-serif;
+
+    --scrim:0.57;
+    --fade:12;
+    --textbg:0.16;       /* едва уловимая подложка под текстом hero */
+    --maxw:1240px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--body);color:var(--ink);background:var(--sky);-webkit-font-smoothing:antialiased;overflow-x:clip;}
+  /* фиксированный фоновый слой — плавное переливание палитры между секциями при скролле */
+  #bg-layer{position:fixed;inset:0;z-index:-2;background:var(--sky);will-change:background-color;}
+  h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.04;letter-spacing:-.01em;margin:0;text-wrap:balance;}
+  p{margin:0;text-wrap:pretty;}
+  a{color:inherit;}
+  .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 clamp(24px,5vw,64px);}
+
+  /* ===================== NAV ===================== */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;
+    padding:22px clamp(24px,5vw,64px);transition:background-color .4s ease,box-shadow .4s ease,padding .3s ease;}
+  .nav.scrolled{background:rgba(251,248,240,.9);backdrop-filter:blur(12px);box-shadow:0 1px 0 rgba(34,51,47,.08);padding-top:13px;padding-bottom:13px;}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;transition:color .4s ease;}
+  .nav.scrolled .brand{color:var(--ink);}
+  .brand .mk{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--terra);color:var(--cream);font-family:var(--body);font-weight:600;font-size:.95rem;flex-shrink:0;}
+  .brand .bn{font-family:var(--display);font-weight:600;font-size:1.24rem;letter-spacing:.01em;line-height:1;white-space:nowrap;}
+  .nav-links{display:flex;gap:2px;align-items:center;list-style:none;margin:0;padding:0;}
+  .nav-links a{text-decoration:none;color:rgba(255,255,255,.94);font-weight:500;font-size:.98rem;padding:9px 15px;border-radius:100px;transition:background-color .2s,color .4s;white-space:nowrap;text-shadow:0 1px 12px rgba(10,28,36,.5);}
+  .nav.scrolled .nav-links a{color:var(--ink);text-shadow:none;}
+  .nav-links a:hover{background:rgba(255,255,255,.16);}
+  .nav.scrolled .nav-links a:hover{background:rgba(34,51,47,.08);}
+  .nav-cta{margin-left:8px;font-family:var(--body);font-weight:600;font-size:.95rem;padding:11px 22px;border-radius:100px;background:var(--terra);color:var(--cream)!important;text-decoration:none;transition:transform .2s,box-shadow .2s;}
+  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 12px 26px -12px var(--terra);}
+  .burger{display:none;background:none;border:none;cursor:pointer;padding:8px;}
+  .burger span{display:block;width:26px;height:2px;background:#fff;margin:6px 0;border-radius:2px;transition:.3s;}
+  .nav.scrolled .burger span{background:var(--ink);}
+
+  /* ===================== HERO — ровно в высоту экрана, без скролла и зума ===================== */
+  .hero{position:relative;height:100svh;min-height:560px;display:flex;align-items:center;overflow:hidden;
+    padding:96px 0 56px;background:#9db6c4;}
+  .hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 32%;z-index:0;will-change:transform;}
+  .hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(94deg,
+      rgba(16,38,48,calc(var(--scrim)*1.12)) 0%,
+      rgba(16,38,48,calc(var(--scrim)*.8)) 26%,
+      rgba(16,38,48,calc(var(--scrim)*.32)) 50%,
+      transparent 66%);}
+  .hero-topshade{position:absolute;top:0;left:0;right:0;height:150px;z-index:1;pointer-events:none;
+    background:linear-gradient(to bottom,rgba(16,38,48,.34),transparent);}
+  .hero-fade{position:absolute;left:0;right:0;bottom:0;height:calc(var(--fade)*1%);z-index:1;pointer-events:none;
+    background:linear-gradient(to top,var(--sky),color-mix(in srgb,var(--sky),transparent 100%));}
+  .hero-inner{position:relative;z-index:2;width:100%;}
+  .hero-copy{max-width:620px;color:#fff;}
+  .eyebrow{font-family:var(--body);font-weight:600;font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;margin:0 0 20px;
+    display:inline-flex;align-items:center;gap:13px;color:#EAD9C4;}
+  .eyebrow::before{content:'';width:36px;height:1.5px;background:var(--terra-soft);}
+  .hero h1{font-size:clamp(2.5rem,5.4vw,4.8rem);color:#fff;text-shadow:0 2px 34px rgba(10,28,36,.45);position:relative;isolation:isolate;width:fit-content;}
+  .hero h1 em{font-style:italic;font-weight:500;color:var(--terra-soft);}
+  .hero .sub{font-size:clamp(1.05rem,1.45vw,1.28rem);line-height:1.5;color:rgba(255,255,255,.95);margin:22px 0 32px;max-width:42ch;text-shadow:0 1px 18px rgba(10,28,36,.55);position:relative;isolation:isolate;width:fit-content;}
+  /* прозрачные затемнённые рамочки-подложки под значимым текстом */
+  .hero h1::before,.hero .sub::before{content:'';position:absolute;z-index:-1;inset:-.34em -.7em;pointer-events:none;
+    background:rgba(8,20,28,var(--textbg));border-radius:16px;
+    box-shadow:0 8px 30px -10px rgba(8,20,28,calc(var(--textbg)*.9));}
+  .hero-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+  .btn{font-family:var(--body);font-weight:600;font-size:1.05rem;padding:17px 32px;border-radius:100px;border:none;cursor:pointer;
+    background:var(--terra);color:var(--cream);text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+    box-shadow:0 16px 40px -14px rgba(194,96,60,.7);transition:transform .25s,box-shadow .25s,background-color .25s;}
+  .btn:hover{transform:translateY(-2px);background:#b35636;box-shadow:0 22px 50px -14px rgba(194,96,60,.8);}
+  .btn .ar{transition:transform .25s;}
+  .btn:hover .ar{transform:translateX(4px);}
+  .hero-msgs{display:inline-flex;align-items:center;gap:11px;}
+  .hero-msgs a{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:1.5px solid rgba(255,255,255,.45);color:#fff;text-decoration:none;font-size:1.05rem;transition:.2s;}
+  .hero-msgs a:hover{background:#fff;color:var(--ink);border-color:#fff;}
+
+  .hero-trust{display:inline-flex;margin-top:30px;gap:0;background:rgba(13,30,39,.42);backdrop-filter:blur(7px);
+    border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:16px 26px;box-shadow:0 24px 50px -28px rgba(10,28,36,.7);}
+  .hero-trust .t{padding-right:26px;margin-right:26px;border-right:1px solid rgba(255,255,255,.24);}
+  .hero-trust .t:last-child{border:none;margin:0;padding:0;}
+  .hero-trust .n{font-family:var(--display);font-weight:600;font-size:1.9rem;color:#fff;line-height:1.1;white-space:nowrap;}
+  .hero-trust .l{font-size:.86rem;color:rgba(255,255,255,.82);margin-top:3px;}
+
+  .scroll-cue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;color:rgba(255,255,255,.85);
+    font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .scroll-cue .line{width:1.5px;height:32px;background:linear-gradient(to bottom,rgba(255,255,255,.7),transparent);}
+  @media (prefers-reduced-motion:no-preference){.scroll-cue{animation:bob 1.9s ease-in-out infinite;}}
+  @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0);opacity:.9;}50%{transform:translateX(-50%) translateY(6px);opacity:.45;}}
+
+  /* появление контента hero + пульс кнопки */
+  @media (prefers-reduced-motion:no-preference){
+    .hero-anim{opacity:0;transform:translateY(24px);animation:heroUp .95s cubic-bezier(.2,.7,.2,1) forwards;}
+    .hero-anim.a1{animation-delay:.15s}.hero-anim.a2{animation-delay:.3s}.hero-anim.a3{animation-delay:.48s}
+    .hero-anim.a4{animation-delay:.66s}.hero-anim.a5{animation-delay:.92s}
+    @keyframes heroUp{to{opacity:1;transform:none}}
+    .btn-pulse{animation:btnPulse 2.9s ease-in-out 2.4s infinite;}
+    .btn-pulse:hover{animation-play-state:paused;}
+    @keyframes btnPulse{0%,100%{box-shadow:0 16px 40px -14px rgba(194,96,60,.7)}50%{box-shadow:0 18px 52px -8px rgba(234,169,131,.95)}}
+  }
+
+  /* ===================== БЛОК 2 — ОБО МНЕ ===================== */
+  .about{position:relative;padding:clamp(80px,12vh,150px) 0;background:transparent;}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,90px);align-items:center;}
+  .about .eyebrow{color:var(--sage);}
+  .about .eyebrow::before{background:var(--terra);}
+  .about h2{font-size:clamp(2rem,4vw,3.2rem);color:var(--ink);margin-bottom:22px;}
+  .about h2 em{font-style:italic;font-weight:500;color:var(--terra);}
+  .about p{font-size:1.12rem;line-height:1.6;color:var(--ink-soft);margin-bottom:1em;}
+  .about .lead{font-size:1.22rem;color:var(--ink);}
+  .about-figures{display:flex;gap:0;margin-top:28px;}
+  .about-figures .t{padding-right:32px;margin-right:32px;border-right:1px solid rgba(34,51,47,.2);}
+  .about-figures .t:last-child{border:none;margin:0;padding:0;}
+  .about-figures .n{font-family:var(--display);font-weight:600;font-size:2.6rem;color:var(--terra);line-height:1;}
+  .about-figures .l{font-size:.92rem;color:var(--ink-soft);margin-top:6px;max-width:14ch;}
+  .about-visual{position:relative;}
+
+  /* рамка до/после */
+  .about-photo{position:relative;width:100%;aspect-ratio:4/5;border-radius:200px 200px 26px 26px;overflow:hidden;
+    box-shadow:0 50px 90px -50px rgba(34,51,47,.6);background:rgba(34,51,47,.06);user-select:none;touch-action:pan-y;}
+  .ba-layer{position:absolute;inset:0;}
+  .ba-layer img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;pointer-events:none;}
+  .ba-after{z-index:1;}
+  .ba-before{z-index:2;clip-path:inset(0 50% 0 0);}
+  .ba-tag{position:absolute;top:16px;z-index:3;font-family:var(--body);font-weight:600;font-size:.8rem;letter-spacing:.03em;
+    padding:6px 13px;border-radius:100px;background:rgba(13,30,39,.66);color:var(--cream);backdrop-filter:blur(4px);}
+  .ba-tag.left{left:16px;}
+  .ba-tag.right{right:16px;}
+  .ba-divider{position:absolute;top:0;bottom:0;left:50%;z-index:4;width:3px;background:var(--cream);transform:translateX(-50%);cursor:ew-resize;box-shadow:0 0 14px rgba(10,28,36,.4);}
+  .ba-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;
+    background:var(--cream);color:var(--terra);display:grid;place-items:center;font-size:1.15rem;box-shadow:0 10px 24px -8px rgba(10,28,36,.6);}
+  .ba-hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:4;font-size:.78rem;color:var(--cream);
+    background:rgba(13,30,39,.55);padding:5px 13px;border-radius:100px;backdrop-filter:blur(4px);pointer-events:none;transition:opacity .3s;white-space:nowrap;}
+  .about-quote{position:absolute;left:-26px;bottom:46px;z-index:5;background:var(--cream);border-radius:18px;padding:18px 22px;max-width:230px;
+    box-shadow:0 30px 60px -28px rgba(34,51,47,.55);border-left:3px solid var(--terra);}
+  .about-quote .q{font-family:var(--display);font-style:italic;font-weight:500;font-size:1.16rem;color:var(--ink);line-height:1.25;}
+
+  /* reveal для блока 2 */
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1;transform:none;}
+  .reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  /* ===================== адаптив ===================== */
+  @media (max-width:980px){
+    .nav-links,.nav-cta{display:none;}
+    .burger{display:block;}
+    .nav.mobile-open .nav-links{display:flex;flex-direction:column;align-items:stretch;position:absolute;top:100%;left:0;right:0;
+      background:var(--cream);padding:12px;gap:2px;box-shadow:0 20px 40px -20px rgba(34,51,47,.4);}
+    .nav.mobile-open .nav-links a{color:var(--ink);padding:14px 16px;text-shadow:none;}
+    .hero-img{object-position:68% 50%;}
+    .hero-scrim{background:linear-gradient(8deg,rgba(16,38,48,.88) 0%,rgba(16,38,48,.5) 42%,transparent 74%);}
+    .about-grid{grid-template-columns:1fr;}
+    .about-visual{order:-1;max-width:380px;}
+    .about-quote{left:0;}
+  }
+  @media (max-width:520px){
+    .hero-trust{flex-wrap:wrap;gap:14px 0;padding:14px 18px;}
+    .hero-trust .t{border:none;padding:0;margin:0;flex:1 1 40%;}
+    .about-figures{flex-wrap:wrap;gap:20px;}
+    .about-figures .t{border:none;padding:0;margin:0;flex:1 1 40%;}
+  }
+
+  .demo-note{position:fixed;right:16px;bottom:16px;z-index:40;background:rgba(0,0,0,.72);color:#fff;backdrop-filter:blur(8px);
+    font-family:var(--body);font-size:.8rem;padding:9px 15px;border-radius:100px;border:1px solid rgba(255,255,255,.15);max-width:300px;}
+  .demo-note b{color:var(--terra-soft);}
+</style>
+<link rel="stylesheet" href="sections.css">
 </head>
 <body>
 
 <div id="bg-layer"></div>
-<div id="bg-glow"></div>
 
-<!-- ============ НАВИГАЦИЯ ============ -->
+<!-- NAV -->
 <nav class="nav" id="nav">
-  <a href="#hero" class="brand">
-    <span class="mark">АВ</span>
-    <span>Андрей Ванишевский</span>
-  </a>
+  <a href="#hero" class="brand"><span class="mk">АВ</span><span class="bn">Андрей Ванишевский</span></a>
   <ul class="nav-links" id="navLinks">
-    <li><a href="#story">История</a></li>
+    <li><a href="#about">Обо мне</a></li>
     <li><a href="#results">Результаты</a></li>
     <li><a href="#system">Система</a></li>
-    <li><a href="#process">Как работаем</a></li>
-    <li><a href="#formats">Форматы</a></li>
+    <li><a href="#process">Как работаю</a></li>
     <li><a href="#contact">Запись</a></li>
-    <li><a href="https://vk.com/vanish_food" target="_blank" rel="noopener" class="ext">Блог</a></li>
   </ul>
-  <div class="nav-cta">
-    <a href="#contact" class="btn">Бесплатная консультация</a>
-  </div>
+  <a href="#contact" class="nav-cta">Бесплатная консультация</a>
   <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
 </nav>
 
-<!-- Плавающая CTA -->
-<a href="#contact" class="btn btn--breathe float-cta" id="floatCta">Записаться бесплатно</a>
-
-<!-- ============ 1. HERO ============ -->
-<section class="hero" id="hero" data-bg="#E6DBC4" data-mood="light">
-  <div class="wrap">
-    <div class="hero-grid">
+<!-- HERO -->
+<section class="hero" id="hero" data-screen-label="Hero" data-bg="sky">
+  <img class="hero-img" id="heroImg" src="assets/hero-bg.jpg" alt="Андрей Ванишевский у моря">
+  <div class="hero-topshade"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-fade"></div>
+  <div class="hero-inner">
+    <div class="wrap">
       <div class="hero-copy">
-        <h1 class="reveal">Похудеть без изнурительных диет — и сохранить результат</h1>
-        <p class="sub reveal d1">Меня зовут Андрей Ванишевский. Девять лет назад я весил 102 кг. Сейчас — 82, и помогаю другим пройти этот путь без голодовок и срывов: через правильно подобранные продукты и систему питания, к которой легко привыкнуть.</p>
-        <div class="hero-actions reveal d2">
-          <a href="#contact" class="btn btn--breathe">Записаться на бесплатную консультацию <span class="arrow">→</span></a>
-          <div class="btn-note">Бесплатно · онлайн или в Санкт-Петербурге</div>
+        <span class="eyebrow hero-anim a1">Нутрициолог · путь −22 кг</span>
+        <h1 class="hero-anim a2">Похудеть <em>без диет</em><br>и сохранить результат</h1>
+        <p class="sub hero-anim a3">Помогаю выстроить питание, к которому легко привыкнуть, — без голодовок, срывов и возврата веса.</p>
+        <div class="hero-actions hero-anim a4">
+          <a href="#contact" class="btn btn-pulse">Записаться на консультацию <span class="ar">→</span></a>
+          <span class="hero-msgs">
+            <a href="#" title="Telegram">✈</a>
+            <a href="#" title="WhatsApp">✆</a>
+          </span>
         </div>
-        <div class="trust-row reveal d3">
-          <div class="trust-item"><div class="num">−22 кг</div><div class="lbl">личный результат</div></div>
-          <div class="trust-item"><div class="num">8 лет</div><div class="lbl">практики</div></div>
-          <div class="trust-item"><div class="num">100+</div><div class="lbl">клиентов прошли путь</div></div>
-        </div>
-      </div>
-      <div class="hero-visual reveal d2">
-        <div class="hero-photo" id="heroPhoto">
-          <image-slot id="hero-andrey" style="width:100%;height:100%" shape="rect" placeholder="Фото Андрея — перетащите сюда"></image-slot>
-        </div>
-        <div class="hero-badge">
-          <span class="big">102→82</span>
-          <span class="small">кг — путь, который прошёл сам</span>
+        <div class="hero-trust hero-anim a5">
+          <div class="t"><div class="n">−22 кг</div><div class="l">личный путь</div></div>
+          <div class="t"><div class="n">9 лет</div><div class="l">практики</div></div>
+          <div class="t"><div class="n">300+</div><div class="l">клиентов</div></div>
         </div>
       </div>
     </div>
   </div>
+  <div class="scroll-cue"><span>листайте</span><span class="line"></span></div>
 </section>
 
-<!-- ============ 2. ЛИЧНАЯ ИСТОРИЯ ============ -->
-<section id="story" data-bg="#F0E9DA" data-mood="light">
+<!-- БЛОК 2 — ОБО МНЕ -->
+<section class="about" id="about" data-screen-label="Обо мне" data-bg="sky">
   <div class="wrap">
-    <div class="story-grid">
-      <div class="story-text">
-        <span class="eyebrow reveal">Личная история</span>
-        <h2 class="reveal">Я знаю это не из учебника — я прошёл это сам</h2>
-        <p class="reveal d1">Девять лет назад я весил 102 кг. Пробовал всё: голодовки, «чистки», жёсткие диеты. Вес то уходил, то возвращался с лихвой — а вместе с ним упадок сил, раздражение и ощущение, что я не справляюсь.</p>
-        <p class="reveal d2">Переломный момент случился, когда я понял: ответственность за тело — только моя, и никакая чудо-диета её не заменит. Я начал разбираться в питании всерьёз, изучать нутрициологию, выстраивать рацион под себя. Так ушли −22 кг — <span class="kw">без голодания</span> и без насилия над собой.</p>
-        <p class="reveal d3">Главное — результат остался. А потом я создал клуб, чтобы другие проходили этот путь не в одиночку, а рядом с тем, кто уже там был.</p>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <span class="eyebrow">Обо мне</span>
+        <h2>Я прошёл этот путь <em>сам</em></h2>
+        <p class="lead">Девять лет назад я весил 102 кг. Перепробовал всё: голодовки, «чистки», жёсткие диеты. Вес уходил и возвращался с лихвой.</p>
+        <p>Переломный момент — когда я понял: ответственность за тело только моя, и никакая чудо-диета её не заменит. Я разобрался в питании всерьёз и выстроил рацион под себя. Так ушли −22 кг — без голодания и насилия над собой. И главное — результат остался.</p>
+        <div class="about-figures">
+          <div class="t"><div class="n">102→82</div><div class="l">кг — мой результат</div></div>
+          <div class="t"><div class="n">9 лет</div><div class="l">помогаю другим</div></div>
+        </div>
       </div>
-      <div class="story-visual reveal d1">
-        <div class="ba" id="ba">
-          <div class="ba-img ba-after">
-            <image-slot id="story-after" style="width:100%;height:100%" shape="rect" placeholder="Фото «после»"></image-slot>
+      <div class="about-visual reveal d1">
+        <div class="about-photo" id="ba">
+          <div class="ba-layer ba-after">
+            <img src="assets/after.jpg" alt="Андрей сейчас, 82 кг">
           </div>
-          <div class="ba-img ba-before" id="baBefore">
-            <image-slot id="story-before" style="width:100%;height:100%" shape="rect" placeholder="Фото «до»"></image-slot>
+          <div class="ba-layer ba-before" id="baBefore">
+            <img src="assets/before.jpg" alt="Андрей до, 102 кг">
           </div>
           <span class="ba-tag left">До · 102 кг</span>
           <span class="ba-tag right">Сейчас · 82 кг</span>
           <div class="ba-divider" id="baDivider"><div class="ba-handle">⇄</div></div>
+          <div class="ba-hint" id="baHint">← потяните, чтобы сравнить →</div>
         </div>
+        <div class="about-quote"><div class="q">«Не диета. Привычки, которые остаются»</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ 3. РЕЗУЛЬТАТЫ КЛИЕНТОВ ============ -->
-<section id="results" class="on-dark" data-bg="#7B9B92" data-mood="dark">
+<!-- БЛОК 3 — РЕЗУЛЬТАТЫ -->
+<section class="results" id="results" data-screen-label="Результаты">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow reveal">Результаты клиентов</span>
-      <h2 class="reveal">Результаты, которые говорят за меня</h2>
-      <p class="lead reveal d1">За 8 лет — сотни историй. Вот лишь некоторые.</p>
+    <div class="section-head reveal">
+      <span class="eyebrow">Результаты клиентов</span>
+      <h2>Результаты, которые <em>говорят за меня</em></h2>
+      <p class="lead">За девять лет — сотни историй. Вот лишь некоторые: реальные люди, реальный путь.</p>
     </div>
 
-    <div class="filter-row reveal d1" id="filterRow">
+    <div class="filter-row reveal" id="filterRow">
       <button class="chip active" data-filter="all">Все</button>
-      <button class="chip" data-filter="women">Женщины</button>
       <button class="chip" data-filter="men">Мужчины</button>
+      <button class="chip" data-filter="women">Женщины</button>
       <button class="chip" data-filter="45plus">45+</button>
     </div>
 
-    <div class="results-grid" id="resultsGrid">
-      <!-- карточки добавляются скриптом -->
-    </div>
-
-    <div class="more-row reveal">
-      <button class="btn btn--ghost" id="moreBtn" style="border-color:rgba(240,233,218,0.5);color:var(--cream)">Показать ещё результаты</button>
-    </div>
+    <div class="results-grid" id="resultsGrid"><!-- карточки добавляются скриптом --></div>
 
     <div class="counters">
-      <div class="counter reveal"><div class="cnum" data-count="100" data-suffix="+">0</div><div class="clbl">клиентов прошли путь</div></div>
-      <div class="counter reveal d1"><div class="cnum" data-count="8">0</div><div class="clbl">лет практики</div></div>
-      <div class="counter reveal d2"><div class="cnum" data-count="14" data-prefix="−" data-suffix=" кг">0</div><div class="clbl">средний результат</div></div>
-      <div class="counter reveal d3"><div class="cnum" data-count="92" data-suffix="%">0</div><div class="clbl">доходят до цели</div></div>
+      <div class="counter reveal"><div class="cnum" data-count="300" data-suffix="+">0</div><div class="clbl">клиентов прошли путь</div></div>
+      <div class="counter reveal d1"><div class="cnum" data-count="9">0</div><div class="clbl">лет практики</div></div>
+      <div class="counter reveal d1"><div class="cnum" data-count="15" data-prefix="−" data-suffix=" кг">0</div><div class="clbl">средний результат</div></div>
+      <div class="counter reveal d2"><div class="cnum" data-count="92" data-suffix="%">0</div><div class="clbl">доходят до цели</div></div>
     </div>
 
     <div class="results-cta reveal">
-      <a href="#contact" class="btn">Хочу так же — записаться на консультацию <span class="arrow">→</span></a>
+      <a href="#contact" class="btn">Хочу так же — записаться на консультацию <span class="ar">→</span></a>
     </div>
   </div>
 </section>
 
-<!-- ============ 4. АВТОРСКАЯ СИСТЕМА ============ -->
-<section id="system" data-bg="#9FB49A" data-mood="light">
+<!-- БЛОК 4 — СИСТЕМА -->
+<section class="system" id="system" data-screen-label="Система" data-bg="#EFE8D8">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow reveal">Авторская система</span>
-      <h2 class="reveal">Почему результат остаётся, а не возвращается через месяц</h2>
-      <p class="philosophy reveal d1">Моя цель — не разовая коррекция веса, а <span class="kw">новые привычки питания</span>. Никаких жёстких диет и голодания: сбалансированный, разнообразный рацион без строгого меню, к которому легко привыкнуть. Вес уходит — и не возвращается.</p>
+    <div class="section-head reveal">
+      <span class="eyebrow">Авторская система</span>
+      <h2>Почему результат <em>остаётся</em>, а не возвращается</h2>
+      <p class="philosophy">Моя цель — не разовая коррекция веса, а <span class="kw">новые привычки питания</span>. Никаких жёстких диет и голодания: сбалансированный, разнообразный рацион без строгого меню, к которому легко привыкнуть. Вес уходит — и не возвращается.</p>
     </div>
-
     <div class="levels">
-      <div class="levels-path"><div class="track"></div><div class="fill" id="pathFill"></div></div>
       <div class="level-card reveal"><div class="level-num">1</div><h3>Личный тренер по питанию</h3><p>Я рядом на всём пути: подбираю рацион под вас и веду к цели шаг за шагом.</p></div>
       <div class="level-card reveal d1"><div class="level-num">2</div><h3>Система сохранения результата</h3><p>Лекции, семинары и тренинги — вы научитесь помогать себе и близким самостоятельно.</p></div>
-      <div class="level-card reveal d2"><div class="level-num">3</div><h3>Чат поддержки</h3><p>Я и сообщество всегда рядом: вопрос, срыв или победа — вы не остаётесь одни.</p></div>
-      <div class="level-card reveal d3"><div class="level-num">4</div><h3>Награды и подарки</h3><p>За прогресс — приятные сюрпризы. Маленькие праздники, которые держат мотивацию.</p></div>
+      <div class="level-card reveal d1"><div class="level-num">3</div><h3>Чат поддержки</h3><p>Я и сообщество всегда рядом: вопрос, срыв или победа — вы не остаётесь одни.</p></div>
+      <div class="level-card reveal d2"><div class="level-num">4</div><h3>Награды и подарки</h3><p>За прогресс — приятные сюрпризы. Маленькие праздники, которые держат мотивацию.</p></div>
     </div>
-
-    <!-- 4а. Награды (спотлайт) -->
-    <div class="gifts reveal">
-      <div class="gifts-text">
-        <span class="eyebrow">Награды и подарки</span>
-        <h3>Ваш прогресс — это праздник</h3>
-        <p>Достигли цели на этапе — получаете подарок. Я подбираю приятные сюрпризы под ваши результаты: небольшие знаки внимания за проделанную работу, которые делают путь теплее.</p>
-      </div>
-      <div class="gift-carousel">
-        <image-slot id="gift-1" style="width:100%" shape="rounded" radius="16" placeholder="Фото подарка"></image-slot>
-        <image-slot id="gift-2" style="width:100%" shape="rounded" radius="16" placeholder="Фото подарка"></image-slot>
-        <image-slot id="gift-3" style="width:100%" shape="rounded" radius="16" placeholder="Фото подарка"></image-slot>
+    <div class="awards reveal">
+      <div class="awards-badge">★</div>
+      <div class="awards-text">
+        <h3>Ваш прогресс — это <em>праздник</em></h3>
+        <p>Достигли цели на этапе — получаете подарок. Я подбираю приятные сюрпризы под ваши результаты: небольшие знаки внимания за проделанную работу, которые делают путь теплее и поддерживают мотивацию.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ 5. КАК ПРОХОДИТ РАБОТА ============ -->
-<section id="process" data-bg="#A6BCC4" data-mood="light">
+<!-- БЛОК 5 — КАК РАБОТАЮ -->
+<section class="process" id="process" data-screen-label="Как работаю" data-bg="#dce8ea">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow reveal">Как проходит работа</span>
-      <h2 class="reveal">Как всё устроено — шаг за шагом</h2>
+    <div class="section-head reveal">
+      <span class="eyebrow">Как проходит работа</span>
+      <h2>Всё устроено <em>понятно</em> — шаг за шагом</h2>
     </div>
     <div class="timeline" id="timeline">
       <div class="tl-line"><div class="tl-fill" id="tlFill"></div></div>
@@ -183,87 +338,87 @@
   </div>
 </section>
 
-<!-- ============ 6. ФОРМАТЫ ============ -->
-<section id="formats" data-bg="#9FB49A" data-mood="light">
+<!-- БЛОК 6 — ФОРМАТЫ -->
+<section class="formats" id="formats" data-screen-label="Форматы" data-bg="#FBF8F0">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow reveal">Форматы работы</span>
-      <h2 class="reveal">Как мы можем работать</h2>
+    <div class="section-head reveal">
+      <span class="eyebrow">Форматы работы</span>
+      <h2>Как мы можем <em>работать</em></h2>
     </div>
-    <div class="formats">
-      <div class="format-card reveal"><div class="fc-icon">формат 01</div><h3>Индивидуально</h3><p>Личная работа онлайн или очно в Санкт-Петербурге. Всё внимание — вашей ситуации и вашему темпу.</p></div>
-      <div class="format-card reveal d1"><div class="fc-icon">формат 02</div><h3>Марафон</h3><p>Индивидуальная работа плюс общее пространство, где участники поддерживают друг друга и идут к цели вместе.</p></div>
-      <div class="format-card reveal d2"><div class="fc-icon">формат 03</div><h3>Выездные мероприятия</h3><p>Развлекательно-оздоровительные встречи клуба — живое общение, новые привычки и хорошее настроение.</p></div>
+    <div class="formats-grid">
+      <div class="fmt-card reveal"><div class="fmt-num">формат 01</div><h3>Индивидуально</h3><p>Личная работа онлайн или очно в Санкт-Петербурге. Всё внимание — вашей ситуации и вашему темпу.</p></div>
+      <div class="fmt-card reveal d1"><div class="fmt-num">формат 02</div><h3>Марафон</h3><p>Индивидуальная работа плюс общее пространство, где участники поддерживают друг друга и идут к цели вместе.</p></div>
+      <div class="fmt-card reveal d2"><div class="fmt-num">формат 03</div><h3>Выездные мероприятия</h3><p>Развлекательно-оздоровительные встречи клуба — живое общение, новые привычки и хорошее настроение.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ============ 7. СТОИМОСТЬ ============ -->
-<section id="price" data-bg="#E6DBC4" data-mood="light">
+<!-- БЛОК 7 — СТОИМОСТЬ -->
+<section class="price" id="price" data-screen-label="Стоимость" data-bg="#EFE8D8">
   <div class="wrap">
     <div class="price-box reveal">
       <span class="eyebrow">Стоимость и запись</span>
-      <h2>Сколько это стоит</h2>
+      <h2>Сколько это <em>стоит</em></h2>
       <p class="lead">Стоимость подбираю индивидуально — она зависит от вашей цели и ситуации. Сначала мы бесплатно созваниваемся или встречаемся, разбираем вашу ситуацию, и только потом я предлагаю решение.</p>
-      <div class="price-tag-row">
+      <div class="price-pills">
         <span class="price-pill">Сначала — бесплатно</span>
         <span class="price-pill">Без обязательств</span>
         <span class="price-pill">Цена — после разбора</span>
       </div>
-      <a href="#contact" class="btn btn--breathe">Записаться на бесплатную консультацию <span class="arrow">→</span></a>
+      <a href="#contact" class="btn">Записаться на бесплатную консультацию <span class="ar">→</span></a>
     </div>
   </div>
 </section>
 
-<!-- ============ 8. FAQ ============ -->
-<section id="faq" data-bg="#F0E9DA" data-mood="light">
+<!-- БЛОК 8 — FAQ -->
+<section class="faq" id="faq" data-screen-label="FAQ" data-bg="sky">
   <div class="wrap">
-    <div class="section-head" style="text-align:center">
-      <span class="eyebrow reveal">Частые вопросы</span>
-      <h2 class="reveal">Что обычно спрашивают</h2>
+    <div class="section-head center reveal">
+      <span class="eyebrow">Частые вопросы</span>
+      <h2>Что обычно <em>спрашивают</em></h2>
     </div>
-    <div class="faq" id="faq">
-      <div class="faq-item reveal"><button class="faq-q">Придётся голодать или сидеть на жёсткой диете?</button><div class="faq-a"><div class="faq-a-inner">Нет. Вся система построена на сбалансированном и разнообразном рационе без голодания и строгого меню. Цель — комфортные привычки, к которым легко привыкнуть, а не запреты, которые невозможно выдержать.</div></div></div>
-      <div class="faq-item reveal"><button class="faq-q">А если я сорвусь?</button><div class="faq-a"><div class="faq-a-inner">Срывы — часть пути, и вы не останетесь с этим одни. Есть чат поддержки и моё сопровождение: вместе разберём, что произошло, и спокойно вернёмся к плану без чувства вины.</div></div></div>
-      <div class="faq-item reveal"><button class="faq-q">Подойдёт ли это в 45+ или при особенностях здоровья?</button><div class="faq-a"><div class="faq-a-inner">Подход мягкий и адаптируется под ваш возраст и образ жизни. При наличии хронических состояний рекомендую согласовать изменения питания с вашим врачом — это нормальная и разумная практика.</div></div></div>
-      <div class="faq-item reveal"><button class="faq-q">Работаем онлайн или очно?</button><div class="faq-a"><div class="faq-a-inner">И так, и так. Очно — в Санкт-Петербурге, онлайн — из любой точки. Формат подбираем под то, как вам удобнее.</div></div></div>
-      <div class="faq-item reveal"><button class="faq-q">Как быстро будет результат?</button><div class="faq-a"><div class="faq-a-inner">Это зависит от вашей цели и стартовой ситуации — обсудим реалистичные сроки на бесплатной консультации. Моя задача — устойчивый результат, который остаётся, а не быстрые цифры, которые возвращаются.</div></div></div>
-      <div class="faq-item reveal"><button class="faq-q">Сколько это стоит?</button><div class="faq-a"><div class="faq-a-inner">Стоимость индивидуальна и зависит от вашей ситуации. Сначала мы бесплатно созваниваемся, разбираем вашу цель, и только потом я предлагаю решение и его стоимость.</div></div></div>
+    <div class="faq-list reveal" id="faqList">
+      <div class="faq-item"><button class="faq-q">Придётся голодать или сидеть на жёсткой диете?</button><div class="faq-a"><div class="faq-a-inner">Нет. Вся система построена на сбалансированном и разнообразном рационе без голодания и строгого меню. Цель — комфортные привычки, к которым легко привыкнуть, а не запреты, которые невозможно выдержать.</div></div></div>
+      <div class="faq-item"><button class="faq-q">А если я сорвусь?</button><div class="faq-a"><div class="faq-a-inner">Срывы — часть пути, и вы не останетесь с этим одни. Есть чат поддержки и моё сопровождение: вместе разберём, что произошло, и спокойно вернёмся к плану без чувства вины.</div></div></div>
+      <div class="faq-item"><button class="faq-q">Подойдёт ли это в 45+ или при особенностях здоровья?</button><div class="faq-a"><div class="faq-a-inner">Подход мягкий и адаптируется под ваш возраст и образ жизни. При наличии хронических состояний рекомендую согласовать изменения питания с вашим врачом — это нормальная и разумная практика.</div></div></div>
+      <div class="faq-item"><button class="faq-q">Работаем онлайн или очно?</button><div class="faq-a"><div class="faq-a-inner">И так, и так. Очно — в Санкт-Петербурге, онлайн — из любой точки. Формат подбираем под то, как вам удобнее.</div></div></div>
+      <div class="faq-item"><button class="faq-q">Как быстро будет результат?</button><div class="faq-a"><div class="faq-a-inner">Это зависит от вашей цели и стартовой ситуации — обсудим реалистичные сроки на бесплатной консультации. Моя задача — устойчивый результат, который остаётся, а не быстрые цифры, которые возвращаются.</div></div></div>
+      <div class="faq-item"><button class="faq-q">Сколько это стоит?</button><div class="faq-a"><div class="faq-a-inner">Стоимость индивидуальна и зависит от вашей ситуации. Сначала мы бесплатно созваниваемся, разбираем вашу цель, и только потом я предлагаю решение и его стоимость.</div></div></div>
     </div>
   </div>
 </section>
 
-<!-- ============ 9. КОНТАКТЫ + ФОРМА ============ -->
-<section id="contact" data-bg="#E6DBC4" data-mood="light">
+<!-- БЛОК 9 — КОНТАКТЫ -->
+<section class="contact" id="contact" data-screen-label="Контакты" data-bg="#EFE8D8">
   <div class="wrap">
     <div class="contact-grid">
-      <div class="contact-info">
-        <span class="eyebrow reveal">Контакты и запись</span>
-        <h2 class="reveal">Готовы изменить себя?</h2>
-        <p class="lead reveal d1" style="font-size:1.2rem;color:var(--ink-soft);max-width:42ch">Первый шаг — простой и бесплатный разговор. Напишите мне, и начнём.</p>
-        <div class="contact-methods reveal d2">
-          <a href="#" class="contact-link"><span class="ci">✆</span><span>WhatsApp<br><span class="sub">написать в мессенджере</span></span></a>
-          <a href="#" class="contact-link"><span class="ci">✈</span><span>Telegram<br><span class="sub">@vanish_food</span></span></a>
-          <a href="https://vk.com/vanish_food" target="_blank" rel="noopener" class="contact-link"><span class="ci">VK</span><span>ВКонтакте<br><span class="sub">vk.com/vanish_food</span></span></a>
-          <a href="tel:+70000000000" class="contact-link"><span class="ci">☎</span><span>Телефон<br><span class="sub">[указать телефон]</span></span></a>
+      <div class="contact-info reveal">
+        <span class="eyebrow">Контакты и запись</span>
+        <h2>Готовы <em>изменить</em> себя?</h2>
+        <p class="lead">Первый шаг — простой и бесплатный разговор. Напишите мне, и начнём.</p>
+        <div class="contact-methods">
+          <a href="#" class="c-link"><span class="c-ic">✆</span><span><span class="ct-name">WhatsApp</span><span class="ct-sub">написать в мессенджере</span></span></a>
+          <a href="#" class="c-link"><span class="c-ic">✈</span><span><span class="ct-name">Telegram</span><span class="ct-sub">@vanish_food</span></span></a>
+          <a href="https://vk.com/vanish_food" target="_blank" rel="noopener" class="c-link"><span class="c-ic">VK</span><span><span class="ct-name">ВКонтакте</span><span class="ct-sub">vk.com/vanish_food</span></span></a>
+          <a href="tel:+70000000000" class="c-link"><span class="c-ic">☎</span><span><span class="ct-name">Телефон</span><span class="ct-sub">[указать телефон]</span></span></a>
         </div>
       </div>
       <div class="form-card reveal d1">
         <div id="formBody">
           <h3>Записаться на бесплатную консультацию</h3>
-          <p style="color:var(--ink-soft);font-size:0.98rem;margin-bottom:22px">Оставьте контакты — я свяжусь с вами и мы договоримся об удобном времени.</p>
-          <form id="leadForm">
+          <p class="fc-sub">Оставьте контакты — я свяжусь с вами и мы договоримся об удобном времени.</p>
+          <form id="leadForm" novalidate>
             <div class="field"><label for="fname">Как вас зовут</label><input id="fname" type="text" placeholder="Ваше имя" required></div>
             <div class="field"><label for="fphone">Телефон или мессенджер</label><input id="fphone" type="text" placeholder="+7 ___ ___-__-__" required></div>
             <div class="field"><label for="fgoal">Ваша цель <span style="font-weight:400;color:var(--ink-soft)">(необязательно)</span></label><textarea id="fgoal" placeholder="Например: похудеть к лету, наладить питание, удержать результат…"></textarea></div>
-            <button type="submit" class="btn">Отправить заявку <span class="arrow">→</span></button>
+            <button type="submit" class="btn">Отправить заявку <span class="ar">→</span></button>
             <p class="form-note">Нажимая кнопку, вы соглашаетесь на обработку контактных данных для связи.</p>
           </form>
         </div>
         <div class="form-success" id="formSuccess">
           <div class="ok">✓</div>
           <h3>Спасибо! Заявка отправлена</h3>
-          <p style="color:var(--ink-soft)">Я свяжусь с вами в ближайшее время. До встречи на консультации!</p>
+          <p>Я свяжусь с вами в ближайшее время. До встречи на консультации!</p>
         </div>
       </div>
     </div>
@@ -272,23 +427,192 @@
 
 <footer class="foot">
   <div class="wrap">
-    Андрей Ванишевский · питание, похудение и ЗОЖ · Санкт-Петербург и онлайн<br>
-    Блог: <a href="https://vk.com/vanish_food" target="_blank" rel="noopener">vk.com/vanish_food</a>
+    <div class="fbrand">Андрей Ванишевский</div>
+    <p>Специалист по питанию, снижению веса и ЗОЖ · Санкт-Петербург и онлайн<br>Блог: <a href="https://vk.com/vanish_food" target="_blank" rel="noopener">vk.com/vanish_food</a></p>
+    <p class="fdisc">Материалы сайта носят информационный характер и не являются медицинской рекомендацией. При наличии заболеваний проконсультируйтесь с врачом.</p>
   </div>
 </footer>
 
-<script src="image-slot.js"></script>
-<script src="app.js"></script>
+<a href="#contact" class="btn float-cta" id="floatCta">Записаться бесплатно</a>
 
-<!-- Tweaks panel (React) -->
+<div class="demo-note">Основная страница · <b>Tweaks</b> — вуаль, кадр, параллакс, цвет блока 2 · в рамке «до/после» потяните ползунок</div>
+
 <div id="tweaks-root"></div>
+
+<script src="image-slot.js"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 <script type="text/babel" src="tweaks-panel.jsx"></script>
-<script type="text/babel" src="tweaks.jsx"></script>
+<script type="text/babel">
+const {useEffect}=React;
+const D={scrim:57,focus:50,focusY:32,fade:12,parallax:6,textbg:16,sky:'#cfe0e3'};
+function shade(hex,pct){
+  hex=hex.replace('#','');
+  if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');
+  let r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
+  const f=c=>Math.max(0,Math.min(255,Math.round(c+c*pct/100)));
+  const h=c=>f(c).toString(16).padStart(2,'0');
+  return '#'+h(r)+h(g)+h(b);
+}
+function hexToRgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function mix(a,b,t){const A=hexToRgb(a),B=hexToRgb(b);const c=i=>Math.round(A[i]+(B[i]-A[i])*t);const h=v=>v.toString(16).padStart(2,'0');return'#'+h(c(0))+h(c(1))+h(c(2));}
+const SKY_PRESETS=['#cfe0e3','#AED0E8','#BFD9EC','#CFE3DA','#DCE5D0','#E7E0CF','#E8DCD2'];
+function App(){
+  const [t,setTweak]=useTweaks(D);
+  const r=document.documentElement;
+  useEffect(()=>{r.style.setProperty('--scrim',t.scrim/100);},[t.scrim]);
+  useEffect(()=>{const img=document.querySelector('.hero-img');if(img)img.dataset.focus=t.focus;},[t.focus]);
+  useEffect(()=>{const img=document.querySelector('.hero-img');if(img)img.dataset.focusy=t.focusY;},[t.focusY]);
+  useEffect(()=>{r.style.setProperty('--fade',t.fade);},[t.fade]);
+  useEffect(()=>{window.__heroParallax=t.parallax;},[t.parallax]);
+  useEffect(()=>{r.style.setProperty('--textbg',t.textbg/100);},[t.textbg]);
+  useEffect(()=>{
+    if(!/^#[0-9a-fA-F]{6}$/.test(t.sky))return;
+    r.style.setProperty('--sky',t.sky);
+    r.style.setProperty('--sky-deep',shade(t.sky,-9));
+    if(window.__updateBg)window.__updateBg();
+  },[t.sky]);
+  return (
+    <TweaksPanel title="Tweaks">
+      <TweakSection label="Hero — фон и читаемость" />
+      <TweakSlider label="Плотность вуали под текстом" value={t.scrim} min={15} max={80} step={2} unit="%" onChange={(v)=>setTweak('scrim',v)} />
+      <TweakSlider label="Кадр: положение по горизонтали" value={t.focus} min={20} max={90} step={1} unit="%" onChange={(v)=>setTweak('focus',v)} />
+      <TweakSlider label="Кадр: по вертикали (голова в кадре)" value={t.focusY} min={0} max={70} step={1} unit="%" onChange={(v)=>setTweak('focusY',v)} />
+      <TweakSlider label="Сила параллакса фото" value={t.parallax} min={0} max={14} step={1} onChange={(v)=>setTweak('parallax',v)} />
+      <TweakSlider label="Растворение низа в блок 2" value={t.fade} min={0} max={40} step={2} unit="%" onChange={(v)=>setTweak('fade',v)} />
+      <TweakSlider label="Подложка под текстом (затемнение)" value={t.textbg} min={0} max={40} step={2} unit="%" onChange={(v)=>setTweak('textbg',v)} />
+      <TweakSection label="Блок 2 — цвет фона" />
+      <div style={{display:'flex',gap:10,alignItems:'center',padding:'2px 2px 8px'}}>
+        <input type="color" value={t.sky} onChange={e=>setTweak('sky',e.target.value)}
+          style={{width:48,height:36,border:'none',borderRadius:9,background:'none',cursor:'pointer',padding:0,flexShrink:0}} />
+        <input type="text" value={t.sky} spellCheck="false" onChange={e=>{let v=e.target.value.trim();if(v&&v[0]!=='#')v='#'+v;setTweak('sky',v);}}
+          style={{flex:1,minWidth:0,fontFamily:'monospace',fontSize:14,letterSpacing:'.04em',padding:'9px 12px',borderRadius:9,border:'1px solid rgba(0,0,0,.18)',background:'#fff',color:'#222',textTransform:'uppercase'}} />
+      </div>
+      <div style={{display:'flex',gap:7,padding:'0 2px 6px',flexWrap:'wrap'}}>
+        {SKY_PRESETS.map(c=>(
+          <button key={c} title={c} onClick={()=>setTweak('sky',c)}
+            style={{width:28,height:28,borderRadius:8,cursor:'pointer',background:c,
+              border:t.sky.toLowerCase()===c.toLowerCase()?'2px solid #222':'1px solid rgba(0,0,0,.22)'}} />
+        ))}
+      </div>
+    </TweaksPanel>
+  );
+}
+ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<App/>);
 
-<!-- Direct-edit style overrides -->
-<style id="__om-edit-overrides"></style>
+const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// failsafe: контент hero всегда станет видимым (на случай заморозки анимаций при экспорте/захвате)
+(function(){
+  const els=document.querySelectorAll('.hero-anim');
+  els.forEach(el=>el.addEventListener('animationend',()=>{el.style.opacity='1';el.style.transform='none';},{once:true}));
+  setTimeout(()=>els.forEach(el=>{el.style.opacity='1';el.style.transform='none';}),2600);
+})();
+const nav=document.getElementById('nav');
+document.getElementById('burger').addEventListener('click',()=>nav.classList.toggle('mobile-open'));
+document.getElementById('navLinks').addEventListener('click',e=>{if(e.target.tagName==='A')nav.classList.remove('mobile-open');});
+
+// параллакс: фото смещается вверх медленнее, низ прикрыт fade в цвет блока 2 (без зума/зазоров)
+const heroImg=document.getElementById('heroImg');
+const hero=document.getElementById('hero');
+const aboutSec=document.getElementById('about');
+window.__heroParallax=6;
+let ticking=false;
+function frame(){
+  const y=window.scrollY;
+  const vh=window.innerHeight;
+  nav.classList.toggle('scrolled',y>40);
+  if(heroImg && !prefersReduced){
+    const heroH=hero.offsetHeight||1;
+    const focus=heroImg.dataset.focus?parseFloat(heroImg.dataset.focus):50;
+    const focusY=heroImg.dataset.focusy?parseFloat(heroImg.dataset.focusy):32;
+    if(y<heroH){
+      const p=(window.__heroParallax||6)/100;
+      const maxShift=heroH*(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--fade'))/100)*0.7;
+      const shift=Math.min(y*p*0.55,maxShift);
+      heroImg.style.transform='translateY('+(-shift)+'px)';
+      heroImg.style.objectPosition=focus+'% '+focusY+'%';
+    }
+  } else if(heroImg){
+    const focus=heroImg.dataset.focus?parseFloat(heroImg.dataset.focus):50;
+    const focusY=heroImg.dataset.focusy?parseFloat(heroImg.dataset.focusy):32;
+    heroImg.style.objectPosition=focus+'% '+focusY+'%';
+  }
+  // плавное переливание палитры между секциями (фиксированный bg-layer)
+  updateBg();
+  ticking=false;
+}
+
+// ——— переливание палитры ———
+var bgLayer=document.getElementById('bg-layer');
+var bgSections=Array.prototype.slice.call(document.querySelectorAll('[data-bg]'));
+function resolveBg(el){
+  var v=el.getAttribute('data-bg');
+  if(v==='sky')return getComputedStyle(document.documentElement).getPropertyValue('--sky').trim()||'#cfe0e3';
+  return v;
+}
+function updateBg(){
+  if(!bgLayer||!bgSections.length)return;
+  var mid=window.scrollY+window.innerHeight*0.5;
+  var idx=0;
+  for(var i=0;i<bgSections.length;i++){if(bgSections[i].offsetTop<=mid)idx=i;}
+  var cur=bgSections[idx],next=bgSections[idx+1],col;
+  if(next){
+    var start=cur.offsetTop,end=next.offsetTop;
+    var tt=(end-start)?(mid-start)/(end-start):0;
+    tt=Math.max(0,Math.min(1,tt));
+    var te=Math.max(0,Math.min(1,(tt-0.45)/0.55)); // плавим в нижней части секции
+    col=mix(resolveBg(cur),resolveBg(next),te);
+  }else{col=resolveBg(cur);}
+  bgLayer.style.backgroundColor=col;
+}
+window.__updateBg=updateBg;
+window.addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(frame);ticking=true;}},{passive:true});
+window.addEventListener('resize',()=>{updateBg();});
+frame();updateBg();
+
+// reveal блока 2 (rect-based — надёжно)
+const reveals=Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+function checkReveal(){
+  if(prefersReduced){reveals.forEach(el=>el.classList.add('in'));return;}
+  const vh=window.innerHeight;
+  for(let i=reveals.length-1;i>=0;i--){
+    const el=reveals[i];const rc=el.getBoundingClientRect();
+    if(rc.top<vh*0.88&&rc.bottom>0){el.classList.add('in');reveals.splice(i,1);}
+  }
+}
+window.addEventListener('scroll',checkReveal,{passive:true});
+window.addEventListener('resize',checkReveal);
+checkReveal();setTimeout(checkReveal,300);
+
+// before/after слайдер
+(function(){
+  const ba=document.getElementById('ba');if(!ba)return;
+  const before=document.getElementById('baBefore');
+  const divider=document.getElementById('baDivider');
+  const hint=document.getElementById('baHint');
+  let dragging=false,used=false;
+  function setPos(clientX){
+    const rect=ba.getBoundingClientRect();
+    let pct=(clientX-rect.left)/rect.width;
+    pct=Math.max(0.04,Math.min(0.96,pct))*100;
+    before.style.clipPath='inset(0 '+(100-pct)+'% 0 0)';
+    divider.style.left=pct+'%';
+    if(!used){used=true;if(hint)hint.style.opacity='0';}
+  }
+  function down(e){dragging=true;setPos((e.touches?e.touches[0]:e).clientX);}
+  function move(e){if(dragging)setPos((e.touches?e.touches[0]:e).clientX);}
+  function up(){dragging=false;}
+  ba.addEventListener('mousedown',down);
+  divider.addEventListener('mousedown',down);
+  window.addEventListener('mousemove',move);
+  window.addEventListener('mouseup',up);
+  ba.addEventListener('touchstart',down,{passive:true});
+  window.addEventListener('touchmove',move,{passive:true});
+  window.addEventListener('touchend',up);
+})();
+</script>
+<script src="sections.js"></script>
 </body>
 </html>
