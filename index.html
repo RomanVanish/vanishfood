@@ -24,7 +24,7 @@
 
     --scrim:0.57;
     --fade:12;
-    --textbg:0.16;       /* едва уловимая подложка под текстом hero */
+    --textbg:0.18;       /* едва уловимая подложка под текстом hero */
     --maxw:1240px;
   }
   *{box-sizing:border-box;}
@@ -79,9 +79,12 @@
   .hero h1 em{font-style:italic;font-weight:500;color:var(--terra-soft);}
   .hero .sub{font-size:clamp(1.05rem,1.45vw,1.28rem);line-height:1.5;color:rgba(255,255,255,.95);margin:22px 0 32px;max-width:42ch;text-shadow:0 1px 18px rgba(10,28,36,.55);position:relative;isolation:isolate;width:fit-content;}
   /* прозрачные затемнённые рамочки-подложки под значимым текстом */
-  .hero h1::before,.hero .sub::before{content:'';position:absolute;z-index:-1;inset:-.34em -.7em;pointer-events:none;
-    background:rgba(8,20,28,var(--textbg));border-radius:16px;
+  .hero h1::before,.hero .sub::before{content:'';position:absolute;z-index:-1;pointer-events:none;
+    background:rgba(8,20,28,var(--textbg));border-radius:14px;
     box-shadow:0 8px 30px -10px rgba(8,20,28,calc(var(--textbg)*.9));}
+  /* меньшая подложка под заголовком + раздельные вертикальные отступы, чтобы рамки не наслаивались */
+  .hero h1::before{inset:-.14em -.5em;}
+  .hero .sub::before{inset:-.34em -.66em;}
   .hero-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
   .btn{font-family:var(--body);font-weight:600;font-size:1.05rem;padding:17px 32px;border-radius:100px;border:none;cursor:pointer;
     background:var(--terra);color:var(--cream);text-decoration:none;display:inline-flex;align-items:center;gap:10px;
@@ -159,6 +162,13 @@
   .reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}
   @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
 
+  /* мобильное вертикальное фото и его вуаль — по умолчанию скрыты */
+  .hero-img-m{display:none;}
+  .hero-scrim-m{display:none;}
+  .sub-mobile{display:none;}
+  .eyebrow-mobile{display:none;}
+  .hero-stats-m{display:none;}
+
   /* ===================== адаптив ===================== */
   @media (max-width:980px){
     .nav-links,.nav-cta{display:none;}
@@ -179,6 +189,120 @@
     .about-figures .t{border:none;padding:0;margin:0;flex:1 1 40%;}
   }
 
+  /* ===================== ПОРТРЕТ (телефон + планшет) — вертикальное фото, чистая зона под лицо ===================== */
+  @media (max-width:1024px) and (orientation:portrait){
+    /* фон: убираем горизонтальный кадр и его боковую вуаль */
+    .hero-img,.hero-scrim,.hero-topshade,.hero-fade{display:none;}
+    .hero-img-m{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;z-index:0;}
+    /* вуаль: заметная сверху (под текстом) и снизу (под кнопкой/статистикой), лицо в середине чистое */
+    .hero-scrim-m{display:block;position:absolute;inset:0;z-index:1;pointer-events:none;
+      background:linear-gradient(to bottom,
+        rgba(12,30,40,.74) 0%,
+        rgba(12,30,40,.52) 18%,
+        rgba(12,30,40,.22) 33%,
+        rgba(12,30,40,0) 48%,
+        rgba(12,30,40,0) 60%,
+        rgba(12,30,40,.30) 80%,
+        rgba(12,30,40,.66) 100%);}
+    /* текст ниже от нав-бара; кнопка + статистика — внизу над фигурой; центр экрана (лицо) свободен */
+    .hero{align-items:flex-start;padding:92px 0 0;min-height:100svh;}
+    .hero-inner{position:static;}
+    .hero-copy{max-width:none;text-align:center;}
+    /* убираем тёмные подложки-боксы — читаемость держит вуаль + тень */
+    .hero h1::before,.hero .sub::before{display:none;}
+    .hero h1{width:auto;font-size:clamp(2.05rem,8.5vw,2.8rem);line-height:1.07;text-shadow:0 2px 24px rgba(8,22,30,.55);}
+    .hero .sub{width:auto;max-width:22ch;margin:16px auto 0;font-size:1.1rem;
+      color:#fff;text-shadow:0 1px 16px rgba(8,22,30,.6);}
+    /* верхняя строка-кикер — новый текст, по центру, без боковой линии */
+    .eyebrow-desktop{display:none;}
+    .eyebrow-mobile{display:block;text-align:center;margin:0 0 30px;font-size:.66rem;letter-spacing:.1em;
+      line-height:1.45;color:#EAD9C4;max-width:none;text-shadow:0 1px 14px rgba(8,22,30,.5);}
+    .eyebrow-mobile::before{display:none;}
+    /* только короткая приписка */
+    .sub-desktop{display:none;}
+    .sub-mobile{display:block;}
+    /* соцлинки и плашка-статистика (десктоп) скрыты */
+    .hero-msgs,.hero-trust,.scroll-cue{display:none;}
+    /* кнопка — внизу по центру, приподнята; под ней тонкая строка статистики */
+    .hero-actions{position:absolute;left:0;right:0;bottom:92px;margin:0;padding:0 28px;justify-content:center;}
+    .hero-actions .btn{width:auto;max-width:none;white-space:nowrap;justify-content:center;font-size:1.04rem;padding:16px 30px;}
+    .hero-stats-m{display:block;position:absolute;left:0;right:0;bottom:48px;padding:0 24px;text-align:center;
+      font-family:var(--body);font-weight:500;font-size:.92rem;letter-spacing:.01em;color:rgba(255,255,255,.94);
+      text-shadow:0 1px 14px rgba(8,22,30,.7);}
+    .hero-stats-m i{font-style:normal;color:var(--terra-soft);margin:0 5px;}
+  }
+
+  /* ===================== ПЛАНШЕТ В КНИЖНОЙ ОРИЕНТАЦИИ — крупнее, просторнее, своя вуаль ===================== */
+  @media (min-width:761px) and (max-width:1024px) and (orientation:portrait){
+    .hero{padding-top:132px;}
+    .hero-img-m{object-position:50% 46%;}
+    /* тёмная вуаль сверху (под текст) и снизу (под кнопку/статы), лицо в середине чистое */
+    .hero-scrim-m{background:linear-gradient(to bottom,
+        rgba(12,30,40,.70) 0%,
+        rgba(12,30,40,.54) 22%,
+        rgba(12,30,40,.34) 34%,
+        rgba(12,30,40,0) 47%,
+        rgba(12,30,40,0) 63%,
+        rgba(12,30,40,.32) 80%,
+        rgba(12,30,40,.62) 100%);}
+    .eyebrow-mobile{font-size:.9rem;letter-spacing:.16em;margin-bottom:44px;}
+    .hero h1{font-size:clamp(3rem,6.4vw,3.9rem);}
+    .hero .sub{font-size:1.42rem;max-width:32ch;margin-top:22px;}
+    .hero-actions{bottom:150px;padding:0 40px;}
+    .hero-actions .btn{font-size:1.24rem;padding:20px 44px;}
+    .hero-stats-m{bottom:86px;font-size:1.2rem;}
+    .hero-stats-m i{margin:0 9px;}
+  }
+
+  /* ===================== АЛЬБОМНАЯ ОРИЕНТАЦИЯ — сплит: текст слева на стекле, Андрей справа ===================== */
+  @media (orientation:landscape) and (max-height:560px){
+    /* горизонтальный кадр: Андрей справа, море слева */
+    .hero-img{display:block!important;object-position:63% 26%;}
+    .hero-img-m,.hero-scrim-m,.hero-fade{display:none!important;}
+    .hero-topshade{display:block;}
+    /* мягкая боковая вуаль слева — стекло-панели ложатся на чуть притенённое море, Андрей чист */
+    .hero-scrim{display:block;background:linear-gradient(96deg,
+        rgba(12,30,42,.52) 0%,
+        rgba(12,30,42,.34) 30%,
+        rgba(12,30,42,.10) 50%,
+        transparent 64%);}
+
+    /* компактный нав, больше места под кадр */
+    .nav{padding:12px clamp(20px,5vw,44px);}
+    .nav .bn{font-size:1.1rem;}
+
+    .hero{align-items:center;min-height:100svh;padding:64px 0 26px;}
+    .hero-inner{position:relative;}
+    .hero-copy{max-width:min(60%,520px);text-align:left;color:#fff;}
+
+    /* в альбомном режиме мало высоты — кикер скрыт */
+    .eyebrow-desktop,.eyebrow-mobile{display:none!important;}
+
+    /* матовые стеклянные подложки под заголовком и припиской */
+    .hero h1{width:max-content;max-width:100%;white-space:nowrap;font-size:clamp(1.7rem,5vh,2.35rem);line-height:1.08;text-shadow:none;}
+    .hero h1::before,.hero .sub::before{display:block;
+      background:rgba(13,30,42,.40);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.12);border-radius:16px;
+      box-shadow:0 20px 44px -24px rgba(8,20,28,.75);}
+    .hero h1::before{inset:-.16em -.58em;}
+    .hero .sub::before{inset:-.46em -.7em;border-radius:14px;}
+
+    .sub-desktop{display:none!important;}
+    .sub-mobile{display:block!important;width:fit-content;max-width:30ch;margin:13px 0 0;
+      font-size:1rem;line-height:1.45;color:#fff;text-align:left;text-shadow:none;}
+
+    /* кнопка + круглые соцлинки в ряд, слева */
+    .hero-actions{position:static!important;margin:22px 0 0;padding:0;justify-content:flex-start;gap:16px;}
+    .hero-actions .btn{width:auto;font-size:1rem;padding:14px 26px;}
+    /* кнопки мессенджеров в альбомной версии не нужны */
+    .hero-msgs{display:none!important;}
+
+    /* строка показателей скрыта в альбомном режиме (мало высоты) */
+    .hero-stats-m{display:none!important;}
+
+    .hero-trust,.scroll-cue{display:none!important;}
+  }
+
   .demo-note{position:fixed;right:16px;bottom:16px;z-index:40;background:rgba(0,0,0,.72);color:#fff;backdrop-filter:blur(8px);
     font-family:var(--body);font-size:.8rem;padding:9px 15px;border-radius:100px;border:1px solid rgba(255,255,255,.15);max-width:300px;}
   .demo-note b{color:var(--terra-soft);}
@@ -186,6 +310,14 @@
 <link rel="stylesheet" href="sections.css">
 </head>
 <body>
+
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#cfe0e3"/>
+  <circle cx="50" cy="50" r="22" fill="#C2603C"/>
+  <text x="50" y="58" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#FBF8F0" text-anchor="middle">АВ</text>
+</svg>
+</template>
 
 <div id="bg-layer"></div>
 
@@ -206,22 +338,27 @@
 <!-- HERO -->
 <section class="hero" id="hero" data-screen-label="Hero" data-bg="sky">
   <img class="hero-img" id="heroImg" src="assets/hero-bg.jpg" alt="Андрей Ванишевский у моря">
+  <img class="hero-img-m" src="assets/hero-mobile.jpg" alt="Андрей Ванишевский у моря">
   <div class="hero-topshade"></div>
   <div class="hero-scrim"></div>
+  <div class="hero-scrim-m"></div>
   <div class="hero-fade"></div>
   <div class="hero-inner">
     <div class="wrap">
       <div class="hero-copy">
-        <span class="eyebrow hero-anim a1">Нутрициолог · путь −22 кг</span>
+        <span class="eyebrow eyebrow-desktop hero-anim a1">Нутрициолог · путь −22 кг</span>
+        <span class="eyebrow eyebrow-mobile hero-anim a1">Специалист по питанию и снижению веса</span>
         <h1 class="hero-anim a2">Похудеть <em>без диет</em><br>и сохранить результат</h1>
-        <p class="sub hero-anim a3">Помогаю выстроить питание, к которому легко привыкнуть, — без голодовок, срывов и возврата веса.</p>
+        <p class="sub sub-desktop hero-anim a3">Помогаю выстроить питание, к которому легко привыкнуть, — без голодовок, срывов и возврата веса.</p>
+        <p class="sub sub-mobile hero-anim a3">Без голодовок, срывов и возврата веса.</p>
         <div class="hero-actions hero-anim a4">
-          <a href="#contact" class="btn btn-pulse">Записаться на консультацию <span class="ar">→</span></a>
+          <a href="#contact" class="btn btn-pulse">Бесплатная консультация <span class="ar">→</span></a>
           <span class="hero-msgs">
             <a href="#" title="Telegram">✈</a>
             <a href="#" title="WhatsApp">✆</a>
           </span>
         </div>
+        <div class="hero-stats-m hero-anim a5">−22 кг <i>·</i> 9 лет практики <i>·</i> 300+ клиентов</div>
         <div class="hero-trust hero-anim a5">
           <div class="t"><div class="n">−22 кг</div><div class="l">личный путь</div></div>
           <div class="t"><div class="n">9 лет</div><div class="l">практики</div></div>
@@ -292,7 +429,7 @@
     </div>
 
     <div class="results-cta reveal">
-      <a href="#contact" class="btn">Хочу так же — записаться на консультацию <span class="ar">→</span></a>
+      <a href="#contact" class="btn">Хочу так же — бесплатная консультация <span class="ar">→</span></a>
     </div>
   </div>
 </section>
@@ -306,10 +443,10 @@
       <p class="philosophy">Моя цель — не разовая коррекция веса, а <span class="kw">новые привычки питания</span>. Никаких жёстких диет и голодания: сбалансированный, разнообразный рацион без строгого меню, к которому легко привыкнуть. Вес уходит — и не возвращается.</p>
     </div>
     <div class="levels">
-      <div class="level-card reveal"><div class="level-num">1</div><h3>Личный тренер по питанию</h3><p>Я рядом на всём пути: подбираю рацион под вас и веду к цели шаг за шагом.</p></div>
-      <div class="level-card reveal d1"><div class="level-num">2</div><h3>Система сохранения результата</h3><p>Лекции, семинары и тренинги — вы научитесь помогать себе и близким самостоятельно.</p></div>
-      <div class="level-card reveal d1"><div class="level-num">3</div><h3>Чат поддержки</h3><p>Я и сообщество всегда рядом: вопрос, срыв или победа — вы не остаётесь одни.</p></div>
-      <div class="level-card reveal d2"><div class="level-num">4</div><h3>Награды и подарки</h3><p>За прогресс — приятные сюрпризы. Маленькие праздники, которые держат мотивацию.</p></div>
+      <div class="level-card reveal"><div class="lc-top"><div class="level-num">1</div><img class="level-img" src="assets/levels/01.png" alt="" loading="lazy" width="500" height="400"></div><h3>Личный тренер по питанию</h3><p>Я рядом на всём пути: подбираю рацион под вас и веду к цели шаг за шагом.</p></div>
+      <div class="level-card reveal d1"><div class="lc-top"><div class="level-num">2</div><img class="level-img" src="assets/levels/02.png" alt="" loading="lazy" width="500" height="400"></div><h3>Система сохранения результата</h3><p>Лекции, семинары и тренинги — вы научитесь помогать себе и близким самостоятельно.</p></div>
+      <div class="level-card reveal d1"><div class="lc-top"><div class="level-num">3</div><img class="level-img" src="assets/levels/03.png" alt="" loading="lazy" width="500" height="400"></div><h3>Чат поддержки</h3><p>Я и сообщество всегда рядом: вопрос, срыв или победа — вы не остаётесь одни.</p></div>
+      <div class="level-card reveal d2"><div class="lc-top"><div class="level-num">4</div><img class="level-img" src="assets/levels/04.png" alt="" loading="lazy" width="500" height="400"></div><h3>Награды и подарки</h3><p>За прогресс — приятные сюрпризы. Маленькие праздники, которые держат мотивацию.</p></div>
     </div>
     <div class="awards reveal">
       <div class="awards-badge">★</div>
@@ -435,8 +572,6 @@
 
 <a href="#contact" class="btn float-cta" id="floatCta">Записаться бесплатно</a>
 
-<div class="demo-note">Основная страница · <b>Tweaks</b> — вуаль, кадр, параллакс, цвет блока 2 · в рамке «до/после» потяните ползунок</div>
-
 <div id="tweaks-root"></div>
 
 <script src="image-slot.js"></script>
@@ -446,7 +581,7 @@
 <script type="text/babel" src="tweaks-panel.jsx"></script>
 <script type="text/babel">
 const {useEffect}=React;
-const D={scrim:57,focus:50,focusY:32,fade:12,parallax:6,textbg:16,sky:'#cfe0e3'};
+const D={scrim:57,focus:50,focusY:32,fade:12,parallax:6,textbg:18,sky:'#cfe0e3'};
 function shade(hex,pct){
   hex=hex.replace('#','');
   if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');

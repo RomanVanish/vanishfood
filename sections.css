@@ -72,8 +72,14 @@
 .levels{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:clamp(40px,5vw,56px);}
 .level-card{background:var(--cream);border-radius:20px;padding:30px 26px 32px;box-shadow:0 24px 50px -38px rgba(34,51,47,.5);
   position:relative;}
-.level-num{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;margin-bottom:20px;
-  font-family:var(--display);font-weight:600;font-size:1.5rem;background:var(--terra);color:var(--cream);}
+.level-num{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+  font-family:var(--display);font-weight:600;font-size:1.45rem;background:var(--terra);color:var(--cream);}
+.lc-top{position:relative;height:138px;margin-bottom:14px;}
+.lc-top .level-num{position:absolute;left:0;top:0;z-index:2;}
+.level-img{position:absolute;right:-10px;bottom:-8px;height:150px;width:auto;max-width:82%;
+  object-fit:contain;object-position:bottom right;pointer-events:none;
+  transition:transform .35s ease;}
+.level-card:hover .level-img{transform:translateY(-3px) scale(1.02);}
 .level-card h3{font-size:1.34rem;margin-bottom:10px;}
 .level-card p{color:var(--ink-soft);font-size:1.02rem;line-height:1.55;margin:0;}
 
