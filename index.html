@@ -598,7 +598,7 @@
 <script type="text/babel">
 const {useEffect}=React;
 const D={scrim:57,focus:50,focusY:32,fade:12,parallax:6,textbg:18,sky:'#cfe0e3',
-  cbg:'#EFE8D8',cic:'#C2603C',cbtn:'#C2603C',ch:'#22332F',
+  cbg:'#EFE8D8',cic:'#C2603C',cbtn:'#C2603C',ch:'#22332F',cem:'#C2603C',ceye:'#6b8a5f',
   sea:'#3a7397',seah:2};
 function shade(hex,pct){
   hex=hex.replace('#','');
@@ -614,6 +614,8 @@ const SKY_PRESETS=['#cfe0e3','#AED0E8','#BFD9EC','#CFE3DA','#DCE5D0','#E7E0CF','
 const CBG_PRESETS=['#22332F','#1C2A26','#3E5A60','#EFE8D8','#cfe0e3','#FBF8F0','#C2603C'];
 const CACCENT_PRESETS=['#C2603C','#D98E6A','#b35636','#6b8a5f','#3E5A60','#EFE8D8','#FBF8F0'];
 const CH_PRESETS=['#22332F','#FBF8F0','#EFE8D8','#C2603C','#6b8a5f'];
+const CEM_PRESETS=['#C2603C','#D98E6A','#6b8a5f','#3E5A60','#EFE8D8','#FBF8F0'];
+const CEYE_PRESETS=['#6b8a5f','#C2603C','#3E5A60','#8FB4C4','#EFE8D8','#FBF8F0'];
 const SEA_PRESETS=['#9DBFC9','#86AEBE','#7BA3B5','#A8C8D0','#B6D0D6','#6E9DB0'];
 function ColorRow({value,onChange,presets}){
   return (
@@ -657,6 +659,8 @@ function App(){
   useEffect(()=>{r.style.setProperty('--c-ic',t.cic);},[t.cic]);
   useEffect(()=>{r.style.setProperty('--c-btn',t.cbtn);},[t.cbtn]);
   useEffect(()=>{r.style.setProperty('--c-h',t.ch);},[t.ch]);
+  useEffect(()=>{r.style.setProperty('--c-em',t.cem);},[t.cem]);
+  useEffect(()=>{r.style.setProperty('--c-eye',t.ceye);},[t.ceye]);
   useEffect(()=>{if(/^#[0-9a-fA-F]{6}$/.test(t.sea)){r.style.setProperty('--sea',t.sea);window.__seaCol=t.sea;if(window.__updateBg)window.__updateBg();}},[t.sea]);
   useEffect(()=>{window.__seaH=t.seah;if(window.__updateBg)window.__updateBg();},[t.seah]);
   return (
@@ -689,6 +693,10 @@ function App(){
       <ColorRow value={t.cbg} onChange={v=>setTweak('cbg',v)} presets={CBG_PRESETS} />
       <TweakSection label="Контакты — цвет заголовка" />
       <ColorRow value={t.ch} onChange={v=>setTweak('ch',v)} presets={CH_PRESETS} />
+      <TweakSection label="Контакты — цвет «изменить»" />
+      <ColorRow value={t.cem} onChange={v=>setTweak('cem',v)} presets={CEM_PRESETS} />
+      <TweakSection label="Контакты — цвет «Контакты и запись»" />
+      <ColorRow value={t.ceye} onChange={v=>setTweak('ceye',v)} presets={CEYE_PRESETS} />
       <TweakSection label="Контакты — цвет иконок" />
       <ColorRow value={t.cic} onChange={v=>setTweak('cic',v)} presets={CACCENT_PRESETS} />
       <TweakSection label="Контакты — цвет кнопки" />
@@ -744,6 +752,7 @@ function frame(){
 // ——— переливание палитры ———
 var bgLayer=document.getElementById('bg-layer');
 var bgSections=Array.prototype.slice.call(document.querySelectorAll('[data-bg]'));
+var contactSec=document.getElementById('contact');
 function resolveBg(el){
   var v=el.getAttribute('data-bg');
   if(v==='sky')return getComputedStyle(document.documentElement).getPropertyValue('--sky').trim()||'#cfe0e3';
@@ -755,13 +764,29 @@ function updateBg(){
   var idx=0;
   for(var i=0;i<bgSections.length;i++){if(bgSections[i].offsetTop<=mid)idx=i;}
   var cur=bgSections[idx],next=bgSections[idx+1],col;
-  if(next){
+  if(next&&next!==contactSec){
     var start=cur.offsetTop,end=next.offsetTop;
     var tt=(end-start)?(mid-start)/(end-start):0;
     tt=Math.max(0,Math.min(1,tt));
     var te=Math.max(0,Math.min(1,(tt-0.45)/0.55)); // плавим в нижней части секции
     col=mix(resolveBg(cur),resolveBg(next),te);
   }else{col=resolveBg(cur);}
+  // переход FAQ → «Контакты»: стартует поздно, но доходит уже ВНУТРИ блока контактов,
+  // на длинной дистанции сквозь границу — поэтому всегда плавный
+  if(contactSec){
+    var cIdx=bgSections.indexOf(contactSec);
+    if(cIdx>0){
+      var cTop=contactSec.offsetTop,cvh=window.innerHeight;
+      var b0=cTop-cvh*0.18;      // старт у нижней кромки FAQ (поздно)
+      var b1=cTop+cvh*0.55;      // финиш уже внутри «Контактов» (далеко → плавно)
+      if(mid>=b0){
+        var cp=(b1>b0)?(mid-b0)/(b1-b0):1;
+        cp=Math.max(0,Math.min(1,cp));
+        cp=cp*cp*(3-2*cp); // smoothstep
+        col=mix(resolveBg(bgSections[cIdx-1]),resolveBg(contactSec),cp);
+      }
+    }
+  }
   // динамический «морской» вход в блок 2 — scroll-driven, тот же механизм переливания
   var seaH=(typeof window.__seaH==='number')?window.__seaH:50;
   if(aboutSec&&seaH>0){
