@@ -169,6 +169,34 @@
     });
   }
 
+  /* ---------- РАЗВОРАЧИВАНИЕ ФОРМЫ (узкие экраны) ---------- */
+  var formToggle=document.getElementById('formToggle');
+  if(formToggle){
+    formToggle.addEventListener('click',function(){
+      var card=formToggle.closest('.form-card');
+      card.classList.add('expanded');
+      formToggle.setAttribute('aria-expanded','true');
+      var first=card.querySelector('#fname');
+      if(first)setTimeout(function(){first.focus();},60);
+    });
+  }
+
+  /* ---------- ЛАЙТБОКС ФОТО ФОРМАТОВ ---------- */
+  (function(){
+    var box=document.getElementById('lightbox');
+    if(!box)return;
+    var bImg=box.querySelector('img');
+    var closeBtn=box.querySelector('.lightbox-close');
+    function openBox(src,alt){bImg.src=src;bImg.alt=alt||'';box.classList.add('open');box.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+    function closeBox(){box.classList.remove('open');box.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+    document.querySelectorAll('[data-zoom]').forEach(function(btn){
+      btn.addEventListener('click',function(){var img=btn.querySelector('img');openBox(btn.getAttribute('data-zoom'),img?img.alt:'');});
+    });
+    box.addEventListener('click',function(e){if(e.target!==bImg)closeBox();});
+    if(closeBtn)closeBtn.addEventListener('click',closeBox);
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBox();});
+  })();
+
   /* ---------- ПЛАВАЮЩАЯ CTA ---------- */
   var floatCta=document.getElementById('floatCta');
   var contact=document.getElementById('contact');
