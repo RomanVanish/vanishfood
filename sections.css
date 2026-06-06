@@ -160,16 +160,16 @@
    9. КОНТАКТЫ + ФОРМА — песочная
    ============================================================ */
 .contact{background:transparent;padding:clamp(84px,12vh,150px) 0;}
-.contact .eyebrow{color:var(--sage);}
+.contact .eyebrow{color:var(--c-eye,var(--sage));}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,72px);align-items:start;}
-.contact h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:18px;}
-.contact h2 em{font-style:italic;font-weight:500;color:var(--terra);}
-.contact .lead{font-size:1.2rem;line-height:1.55;color:var(--ink-soft);max-width:40ch;margin-bottom:28px;}
+.contact h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:18px;color:var(--c-h,var(--ink));}
+.contact h2 em{font-style:italic;font-weight:500;color:var(--c-em,var(--terra));}
+.contact .lead{font-size:1.2rem;line-height:1.55;color:color-mix(in srgb,var(--c-h,var(--ink)),transparent 26%);max-width:40ch;margin-bottom:28px;}
 .contact-methods{display:flex;flex-direction:column;gap:12px;}
 .c-link{display:flex;align-items:center;gap:16px;text-decoration:none;color:var(--ink);background:var(--cream);border-radius:16px;
   padding:16px 20px;transition:transform .2s,box-shadow .2s;}
 .c-link:hover{transform:translateX(5px);box-shadow:0 16px 34px -20px rgba(34,51,47,.5);}
-.c-ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--terra);color:var(--cream);font-size:1.2rem;flex-shrink:0;}
+.c-ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--c-ic,var(--terra));color:var(--cream);font-size:1.2rem;flex-shrink:0;}
 .c-link .ct-name{font-family:var(--display);font-weight:600;font-size:1.18rem;line-height:1.1;}
 .c-link .ct-sub{font-size:.9rem;color:var(--ink-soft);margin-top:2px;}
 
@@ -183,6 +183,8 @@
 .field input:focus,.field textarea:focus{outline:none;border-color:var(--terra);}
 .field textarea{resize:vertical;min-height:80px;}
 .form-card .btn{width:100%;justify-content:center;margin-top:4px;}
+.contact .btn{background:var(--c-btn,var(--terra));box-shadow:0 16px 40px -14px color-mix(in srgb,var(--c-btn,var(--terra)),transparent 30%);}
+.contact .btn:hover{background:color-mix(in srgb,var(--c-btn,var(--terra)),#000 12%);}
 .form-note{font-size:.86rem;color:var(--ink-soft);margin-top:13px;text-align:center;}
 .form-success{display:none;text-align:center;padding:24px 0;}
 .form-success.show{display:block;}
