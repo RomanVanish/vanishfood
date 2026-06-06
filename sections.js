@@ -25,7 +25,10 @@
      before:'assets/clients/05-before.jpg', after:'assets/clients/05-after.jpg'}
   ];
   var grid=document.getElementById('resultsGrid');
-  var activeFilter='all';
+  // каждый фильтр относится к «оси»: пол или возраст.
+  // внутри оси — ИЛИ, между осями — И. пустой набор = показать всё.
+  var DIMENSION={men:'gender',women:'gender','45plus':'age'};
+  var activeFilters=[];
   function buildCards(){
     if(!grid)return;
     grid.innerHTML='';
@@ -48,20 +51,48 @@
   }
   function applyFilter(){
     if(!grid)return;
+    // группируем активные фильтры по осям
+    var byDim={};
+    activeFilters.forEach(function(f){
+      var d=DIMENSION[f]||f;
+      (byDim[d]=byDim[d]||[]).push(f);
+    });
+    var dims=Object.keys(byDim);
+    var shown=0;
     grid.querySelectorAll('.r-card').forEach(function(card){
       var cats=card.getAttribute('data-cat').split(' ');
-      var match=activeFilter==='all'||cats.indexOf(activeFilter)!==-1;
+      // карта проходит, если по КАЖДОЙ активной оси совпадает хотя бы один тег (И между осями, ИЛИ внутри)
+      var match=dims.every(function(d){
+        return byDim[d].some(function(f){return cats.indexOf(f)!==-1;});
+      });
       card.classList.toggle('hide',!match);
+      if(match)shown++;
+    });
+    var empty=document.getElementById('resultsEmpty');
+    if(empty)empty.classList.toggle('show',shown===0);
+  }
+  function syncChips(){
+    if(!filterRow)return;
+    filterRow.querySelectorAll('.chip').forEach(function(c){
+      var cf=c.getAttribute('data-filter');
+      var on=cf==='all'?activeFilters.length===0:activeFilters.indexOf(cf)!==-1;
+      c.classList.toggle('active',on);
+      c.setAttribute('aria-pressed',on?'true':'false');
     });
   }
-  buildCards();applyFilter();
   var filterRow=document.getElementById('filterRow');
+  buildCards();applyFilter();syncChips();
   if(filterRow){
     filterRow.addEventListener('click',function(e){
       var btn=e.target.closest('.chip');if(!btn)return;
-      filterRow.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active');});
-      btn.classList.add('active');
-      activeFilter=btn.getAttribute('data-filter');
+      var f=btn.getAttribute('data-filter');
+      if(f==='all'){
+        activeFilters=[];
+      }else{
+        var i=activeFilters.indexOf(f);
+        if(i!==-1)activeFilters.splice(i,1);else activeFilters.push(f);
+      }
+      syncChips();
       applyFilter();
     });
   }

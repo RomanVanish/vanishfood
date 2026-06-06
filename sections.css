@@ -39,6 +39,8 @@
 .chip.active{background:var(--cream);color:#2e4640;border-color:var(--cream);}
 
 .results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.results-empty{display:none;margin:8px 0 0;font-family:var(--body);font-size:1.02rem;color:rgba(251,248,240,.78);}
+.results-empty.show{display:block;}
 .r-card{background:var(--cream);color:var(--ink);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;
   box-shadow:0 30px 60px -38px rgba(0,0,0,.6);transition:transform .35s,box-shadow .35s;}
 .r-card:hover{transform:translateY(-6px);box-shadow:0 40px 70px -38px rgba(0,0,0,.65);}

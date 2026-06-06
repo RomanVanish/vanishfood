@@ -122,7 +122,13 @@
 
   /* ===================== БЛОК 2 — ОБО МНЕ ===================== */
   .about{position:relative;padding:clamp(80px,12vh,150px) 0;background:transparent;}
-  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,90px);align-items:center;}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(40px,6vw,90px);row-gap:clamp(18px,2.4vw,30px);
+    grid-template-rows:1fr auto auto 1fr;
+    grid-template-areas:".  visual" "head visual" "body visual" ".  visual";}
+  .about-head{grid-area:head;}
+  .about-body{grid-area:body;}
+  .about-head h2{margin-bottom:0;}
+  .about-visual{grid-area:visual;align-self:center;}
   .about .eyebrow{color:var(--sage);}
   .about .eyebrow::before{background:var(--terra);}
   .about h2{font-size:clamp(2rem,4vw,3.2rem);color:var(--ink);margin-bottom:22px;}
@@ -143,16 +149,16 @@
   .ba-layer img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;pointer-events:none;}
   .ba-after{z-index:1;}
   .ba-before{z-index:2;clip-path:inset(0 50% 0 0);}
-  .ba-tag{position:absolute;top:16px;z-index:3;font-family:var(--body);font-weight:600;font-size:.8rem;letter-spacing:.03em;
+  .ba-tag{position:absolute;bottom:16px;z-index:3;font-family:var(--body);font-weight:600;font-size:.8rem;letter-spacing:.03em;
     padding:6px 13px;border-radius:100px;background:rgba(13,30,39,.66);color:var(--cream);backdrop-filter:blur(4px);}
   .ba-tag.left{left:16px;}
   .ba-tag.right{right:16px;}
   .ba-divider{position:absolute;top:0;bottom:0;left:50%;z-index:4;width:3px;background:var(--cream);transform:translateX(-50%);cursor:ew-resize;box-shadow:0 0 14px rgba(10,28,36,.4);}
   .ba-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;
     background:var(--cream);color:var(--terra);display:grid;place-items:center;font-size:1.15rem;box-shadow:0 10px 24px -8px rgba(10,28,36,.6);}
-  .ba-hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:4;font-size:.78rem;color:var(--cream);
+  .ba-hint{position:absolute;left:50%;top:calc(50% + 38px);transform:translateX(-50%);z-index:4;font-size:.78rem;color:var(--cream);
     background:rgba(13,30,39,.55);padding:5px 13px;border-radius:100px;backdrop-filter:blur(4px);pointer-events:none;transition:opacity .3s;white-space:nowrap;}
-  .about-quote{position:absolute;left:-26px;bottom:46px;z-index:5;background:var(--cream);border-radius:18px;padding:18px 22px;max-width:230px;
+  .about-quote{position:absolute;left:-26px;bottom:72px;z-index:5;background:var(--cream);border-radius:18px;padding:18px 22px;max-width:230px;
     box-shadow:0 30px 60px -28px rgba(34,51,47,.55);border-left:3px solid var(--terra);}
   .about-quote .q{font-family:var(--display);font-style:italic;font-weight:500;font-size:1.16rem;color:var(--ink);line-height:1.25;}
 
@@ -178,8 +184,10 @@
     .nav.mobile-open .nav-links a{color:var(--ink);padding:14px 16px;text-shadow:none;}
     .hero-img{object-position:68% 50%;}
     .hero-scrim{background:linear-gradient(8deg,rgba(16,38,48,.88) 0%,rgba(16,38,48,.5) 42%,transparent 74%);}
-    .about-grid{grid-template-columns:1fr;}
-    .about-visual{order:-1;max-width:380px;}
+    .about-grid{grid-template-columns:1fr;grid-template-rows:auto;grid-template-areas:"head" "visual" "body";row-gap:clamp(26px,5vw,40px);}
+    .about-head{text-align:center;}
+    .about-head .eyebrow{justify-content:center;}
+    .about-visual{grid-area:visual;width:min(380px,100%);margin-inline:auto;}
     .about-quote{left:0;}
   }
   @media (max-width:520px){
@@ -374,15 +382,9 @@
 <section class="about" id="about" data-screen-label="Обо мне" data-bg="sky">
   <div class="wrap">
     <div class="about-grid">
-      <div class="about-text reveal">
+      <div class="about-head reveal">
         <span class="eyebrow">Обо мне</span>
         <h2>Я прошёл этот путь <em>сам</em></h2>
-        <p class="lead">Девять лет назад я весил 102 кг. Перепробовал всё: голодовки, «чистки», жёсткие диеты. Вес уходил и возвращался с лихвой.</p>
-        <p>Переломный момент — когда я понял: ответственность за тело только моя, и никакая чудо-диета её не заменит. Я разобрался в питании всерьёз и выстроил рацион под себя. Так ушли −22 кг — без голодания и насилия над собой. И главное — результат остался.</p>
-        <div class="about-figures">
-          <div class="t"><div class="n">102→82</div><div class="l">кг — мой результат</div></div>
-          <div class="t"><div class="n">9 лет</div><div class="l">помогаю другим</div></div>
-        </div>
       </div>
       <div class="about-visual reveal d1">
         <div class="about-photo" id="ba">
@@ -398,6 +400,14 @@
           <div class="ba-hint" id="baHint">← потяните, чтобы сравнить →</div>
         </div>
         <div class="about-quote"><div class="q">«Не диета. Привычки, которые остаются»</div></div>
+      </div>
+      <div class="about-body reveal d2">
+        <p class="lead">Девять лет назад я весил 102 кг. Перепробовал всё: голодовки, «чистки», жёсткие диеты. Вес уходил и возвращался с лихвой.</p>
+        <p>Переломный момент — когда я понял: ответственность за тело только моя, и никакая чудо-диета её не заменит. Я разобрался в питании всерьёз и выстроил рацион под себя. Так ушли −22 кг — без голодания и насилия над собой. И главное — результат остался.</p>
+        <div class="about-figures">
+          <div class="t"><div class="n">102→82</div><div class="l">кг — мой результат</div></div>
+          <div class="t"><div class="n">9 лет</div><div class="l">помогаю другим</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -420,6 +430,7 @@
     </div>
 
     <div class="results-grid" id="resultsGrid"><!-- карточки добавляются скриптом --></div>
+    <p class="results-empty" id="resultsEmpty">По выбранным фильтрам историй пока нет. Снимите часть фильтров или нажмите «Все».</p>
 
     <div class="counters">
       <div class="counter reveal"><div class="cnum" data-count="300" data-suffix="+">0</div><div class="clbl">клиентов прошли путь</div></div>
