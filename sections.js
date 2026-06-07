@@ -152,20 +152,74 @@
     });
   }
 
-  /* ---------- ФОРМА ---------- */
+  /* ---------- ФОРМА ----------
+     Заявка уходит на функцию в Yandex Cloud, которая шлёт письмо
+     через Yandex Cloud Postbox. Сюда вставь ссылку своей функции
+     вида https://functions.yandexcloud.net/<ID функции>             */
+  var LEAD_ENDPOINT='https://functions.yandexcloud.net/d4esmspq1ld9h9qoa60q';
+
   var form=document.getElementById('leadForm');
   if(form){
+    var submitBtn=form.querySelector('button[type="submit"]');
+    var btnHtml=submitBtn?submitBtn.innerHTML:'';
+
+    function showError(msg){
+      var box=document.getElementById('formError');
+      if(!box){
+        box=document.createElement('p');
+        box.id='formError';
+        box.className='form-note';
+        box.style.color='var(--terra)';
+        box.style.fontWeight='600';
+        form.appendChild(box);
+      }
+      box.textContent=msg;
+    }
+
     form.addEventListener('submit',function(e){
       e.preventDefault();
-      var name=document.getElementById('fname').value.trim();
-      var phone=document.getElementById('fphone').value.trim();
+      var nameEl=document.getElementById('fname');
+      var phoneEl=document.getElementById('fphone');
+      var name=nameEl.value.trim();
+      var phone=phoneEl.value.trim();
+      var goal=(document.getElementById('fgoal')||{value:''}).value.trim();
+
+      nameEl.style.borderColor='';
+      phoneEl.style.borderColor='';
       if(!name||!phone){
-        if(!name)document.getElementById('fname').style.borderColor='var(--terra)';
-        if(!phone)document.getElementById('fphone').style.borderColor='var(--terra)';
+        if(!name)nameEl.style.borderColor='var(--terra)';
+        if(!phone)phoneEl.style.borderColor='var(--terra)';
         return;
       }
-      document.getElementById('formBody').style.display='none';
-      document.getElementById('formSuccess').classList.add('show');
+
+      var prevError=document.getElementById('formError');
+      if(prevError)prevError.textContent='';
+
+      if(LEAD_ENDPOINT.indexOf('http')!==0){
+        // Эндпоинт ещё не настроен — показываем успех, но предупреждаем в консоли.
+        console.warn('LEAD_ENDPOINT не задан — заявка никуда не отправлена. Вставь ссылку функции в sections.js.');
+        document.getElementById('formBody').style.display='none';
+        document.getElementById('formSuccess').classList.add('show');
+        return;
+      }
+
+      if(submitBtn){submitBtn.disabled=true;submitBtn.innerHTML='Отправляем…';}
+
+      fetch(LEAD_ENDPOINT,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({name:name,phone:phone,goal:goal,page:location.href})
+      }).then(function(r){
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        return r.json().catch(function(){return {};});
+      }).then(function(){
+        document.getElementById('formBody').style.display='none';
+        document.getElementById('formSuccess').classList.add('show');
+      }).catch(function(err){
+        console.error('Отправка заявки не удалась:',err);
+        if(submitBtn){submitBtn.disabled=false;submitBtn.innerHTML=btnHtml;}
+        showError('Не удалось отправить заявку. Попробуйте ещё раз или напишите мне в Telegram/WhatsApp.');
+      });
     });
   }
 
