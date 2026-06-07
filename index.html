@@ -11,8 +11,8 @@
   :root{
     --cream:#FBF8F0;
     --sky:#cfe0e3;        /* блок 2 — утреннее небо */
-    --sky-deep:#bccccf;
-    --sea:#3a7397;        /* переход hero → блок 2 (морской тон) */
+    --sky-deep:#bcd1d5;
+    --sea:#8FB4C4;        /* переход hero → блок 2 (морской тон) */
     --sea-h:50;           /* высота морского перехода вверху блока 2, vh */
     --sand:#EFE8D8;
     --ink:#22332F;
@@ -28,17 +28,6 @@
     --fade:12;
     --textbg:0.18;       /* едва уловимая подложка под текстом hero */
     --maxw:1240px;
-
-    /* зафиксированные параметры (бывшие твики) */
-    --c-h:#22332F;       /* контакты — цвет заголовка */
-    --c-em:#af3528;      /* контакты — цвет «изменить» */
-    --c-ic:#C2603C;      /* контакты — цвет иконок */
-    --c-btn:#C2603C;     /* контакты — цвет кнопки */
-    --veil-col:#ecddbc;  /* медовая вуаль сверху — цвет */
-    --veil-int:85%;      /* интенсивность вуали */
-    --veil-h:22%;        /* толщина вуали */
-    --card-x:16vw;       /* сдвиг карточки вправо */
-    --card-y:8vh;        /* сдвиг карточки по вертикали */
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -335,6 +324,14 @@
 </head>
 <body>
 
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" fill="#cfe0e3"/>
+  <circle cx="50" cy="50" r="22" fill="#C2603C"/>
+  <text x="50" y="58" font-family="Georgia, serif" font-size="20" font-weight="700" fill="#FBF8F0" text-anchor="middle">АВ</text>
+</svg>
+</template>
+
 <div id="bg-layer"></div>
 
 <!-- NAV -->
@@ -574,14 +571,18 @@
   <div class="contact-veil" aria-hidden="true"></div>
   <div class="contact-stage">
     <div class="form-card reveal">
+      <button type="button" class="form-toggle" id="formToggle" aria-expanded="false" aria-controls="formBody">
+        <span class="ft-eyebrow">Бесплатная консультация</span>
+        <span class="ft-title">Готовы <em>изменить</em> себя?</span>
+        <span class="ft-hint">Нажмите, чтобы оставить заявку <span class="ft-ar" aria-hidden="true">↓</span></span>
+      </button>
       <h2>Готовы <em>изменить</em> себя?</h2>
       <p class="lead">Первый шаг — простой и бесплатный разговор. Оставьте контакты, и я свяжусь с вами.</p>
-      <button type="button" class="btn form-toggle" id="formToggle" aria-expanded="false" aria-controls="formBody">Оставить контакты <span class="ar">→</span></button>
       <div id="formBody">
         <form id="leadForm" novalidate>
           <div class="field"><label for="fname">Как вас зовут</label><input id="fname" type="text" placeholder="Ваше имя" required></div>
           <div class="field"><label for="fphone">Телефон или мессенджер</label><input id="fphone" type="text" placeholder="+7 ___ ___-__-__" required></div>
-          <div class="field"><label for="fgoal">Ваша цель <span style="font-weight:400;color:var(--ink-soft)">(необязательно)</span></label><textarea id="fgoal" placeholder="Например: похудеть к лету, наладить питание, удержать результат…"></textarea></div>
+          <div class="field"><label for="fgoal">Ваша цель <span style="font-weight:400;color:var(--ink-soft)">(необязательно)</span></label><textarea id="fgoal" placeholder="Например: похудеть к лету, наладить питание…"></textarea></div>
           <button type="submit" class="btn">Отправить заявку <span class="ar">→</span></button>
           <p class="form-note">Нажимая кнопку, вы соглашаетесь на обработку контактных данных для связи.</p>
         </form>
@@ -614,13 +615,135 @@
 
 <a href="#contact" class="btn float-cta" id="floatCta">Записаться бесплатно</a>
 
-<script>
-(function(){
-'use strict';
-var prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-function hexToRgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(function(c){return c+c;}).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
-function mix(a,b,t){var A=hexToRgb(a),B=hexToRgb(b);var c=function(i){return Math.round(A[i]+(B[i]-A[i])*t);};var h=function(v){return v.toString(16).padStart(2,'0');};return'#'+h(c(0))+h(c(1))+h(c(2));}
+<div id="tweaks-root"></div>
 
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+const {useEffect}=React;
+const D={scrim:57,focus:50,focusY:32,fade:12,parallax:6,textbg:18,sky:'#cfe0e3',
+  cbg:'#ecddbc',cic:'#C2603C',cbtn:'#C2603C',ch:'#22332F',cem:'#af3528',ceye:'#6b8a5f',
+  sea:'#3a7397',seah:2,veilCol:'#ecddbc',veilInt:85,veilH:22,cardX:16,cardY:8};
+function shade(hex,pct){
+  hex=hex.replace('#','');
+  if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');
+  let r=parseInt(hex.slice(0,2),16),g=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
+  const f=c=>Math.max(0,Math.min(255,Math.round(c+c*pct/100)));
+  const h=c=>f(c).toString(16).padStart(2,'0');
+  return '#'+h(r)+h(g)+h(b);
+}
+function hexToRgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function mix(a,b,t){const A=hexToRgb(a),B=hexToRgb(b);const c=i=>Math.round(A[i]+(B[i]-A[i])*t);const h=v=>v.toString(16).padStart(2,'0');return'#'+h(c(0))+h(c(1))+h(c(2));}
+const SKY_PRESETS=['#cfe0e3','#AED0E8','#BFD9EC','#CFE3DA','#DCE5D0','#E7E0CF','#E8DCD2'];
+const CBG_PRESETS=['#ecddbc','#22332F','#1C2A26','#3E5A60','#EFE8D8','#FBF8F0','#C2603C'];
+const CACCENT_PRESETS=['#C2603C','#D98E6A','#b35636','#6b8a5f','#3E5A60','#EFE8D8','#FBF8F0'];
+const CH_PRESETS=['#22332F','#FBF8F0','#EFE8D8','#C2603C','#6b8a5f'];
+const CEM_PRESETS=['#C2603C','#D98E6A','#6b8a5f','#3E5A60','#EFE8D8','#FBF8F0'];
+const CEYE_PRESETS=['#6b8a5f','#C2603C','#3E5A60','#8FB4C4','#EFE8D8','#FBF8F0'];
+const VEIL_PRESETS=['#ecddbc','#E6B566','#D9A441','#E8C07A','#C98A3C','#E3A857','#F0D29A'];
+const SEA_PRESETS=['#9DBFC9','#86AEBE','#7BA3B5','#A8C8D0','#B6D0D6','#6E9DB0'];
+function ColorRow({value,onChange,presets}){
+  return (
+    <div>
+      <div style={{display:'flex',gap:10,alignItems:'center',padding:'2px 2px 8px'}}>
+        <input type="color" value={value} onChange={e=>onChange(e.target.value)}
+          style={{width:48,height:36,border:'none',borderRadius:9,background:'none',cursor:'pointer',padding:0,flexShrink:0}} />
+        <input type="text" value={value} spellCheck="false" onChange={e=>{let v=e.target.value.trim();if(v&&v[0]!=='#')v='#'+v;onChange(v);}}
+          style={{flex:1,minWidth:0,fontFamily:'monospace',fontSize:14,letterSpacing:'.04em',padding:'9px 12px',borderRadius:9,border:'1px solid rgba(0,0,0,.18)',background:'#fff',color:'#222',textTransform:'uppercase'}} />
+      </div>
+      <div style={{display:'flex',gap:7,padding:'0 2px 6px',flexWrap:'wrap'}}>
+        {presets.map(c=>(
+          <button key={c} title={c} onClick={()=>onChange(c)}
+            style={{width:28,height:28,borderRadius:8,cursor:'pointer',background:c,
+              border:value.toLowerCase()===c.toLowerCase()?'2px solid #222':'1px solid rgba(0,0,0,.22)'}} />
+        ))}
+      </div>
+    </div>
+  );
+}
+function App(){
+  const [t,setTweak]=useTweaks(D);
+  const r=document.documentElement;
+  useEffect(()=>{r.style.setProperty('--scrim',t.scrim/100);},[t.scrim]);
+  useEffect(()=>{const img=document.querySelector('.hero-img');if(img)img.dataset.focus=t.focus;},[t.focus]);
+  useEffect(()=>{const img=document.querySelector('.hero-img');if(img)img.dataset.focusy=t.focusY;},[t.focusY]);
+  useEffect(()=>{r.style.setProperty('--fade',t.fade);},[t.fade]);
+  useEffect(()=>{window.__heroParallax=t.parallax;},[t.parallax]);
+  useEffect(()=>{r.style.setProperty('--textbg',t.textbg/100);},[t.textbg]);
+  useEffect(()=>{
+    if(!/^#[0-9a-fA-F]{6}$/.test(t.sky))return;
+    r.style.setProperty('--sky',t.sky);
+    r.style.setProperty('--sky-deep',shade(t.sky,-9));
+    if(window.__updateBg)window.__updateBg();
+  },[t.sky]);
+  useEffect(()=>{
+    if(!/^#[0-9a-fA-F]{6}$/.test(t.cbg))return;
+    const el=document.getElementById('contact');
+    if(el){el.setAttribute('data-bg',t.cbg);if(window.__updateBg)window.__updateBg();}
+  },[t.cbg]);
+  useEffect(()=>{r.style.setProperty('--c-ic',t.cic);},[t.cic]);
+  useEffect(()=>{r.style.setProperty('--c-btn',t.cbtn);},[t.cbtn]);
+  useEffect(()=>{r.style.setProperty('--c-h',t.ch);},[t.ch]);
+  useEffect(()=>{r.style.setProperty('--c-em',t.cem);},[t.cem]);
+  useEffect(()=>{r.style.setProperty('--c-eye',t.ceye);},[t.ceye]);
+  useEffect(()=>{if(/^#[0-9a-fA-F]{6}$/.test(t.sea)){r.style.setProperty('--sea',t.sea);window.__seaCol=t.sea;if(window.__updateBg)window.__updateBg();}},[t.sea]);
+  useEffect(()=>{window.__seaH=t.seah;if(window.__updateBg)window.__updateBg();},[t.seah]);
+  useEffect(()=>{if(/^#[0-9a-fA-F]{6}$/.test(t.veilCol))r.style.setProperty('--veil-col',t.veilCol);},[t.veilCol]);
+  useEffect(()=>{r.style.setProperty('--veil-int',t.veilInt+'%');},[t.veilInt]);
+  useEffect(()=>{r.style.setProperty('--veil-h',t.veilH+'%');},[t.veilH]);
+  useEffect(()=>{r.style.setProperty('--card-x',t.cardX+'vw');},[t.cardX]);
+  useEffect(()=>{r.style.setProperty('--card-y',t.cardY+'vh');},[t.cardY]);
+  return (
+    <TweaksPanel title="Tweaks">
+      <TweakSection label="Hero — фон и читаемость" />
+      <TweakSlider label="Плотность вуали под текстом" value={t.scrim} min={15} max={80} step={2} unit="%" onChange={(v)=>setTweak('scrim',v)} />
+      <TweakSlider label="Кадр: положение по горизонтали" value={t.focus} min={20} max={90} step={1} unit="%" onChange={(v)=>setTweak('focus',v)} />
+      <TweakSlider label="Кадр: по вертикали (голова в кадре)" value={t.focusY} min={0} max={70} step={1} unit="%" onChange={(v)=>setTweak('focusY',v)} />
+      <TweakSlider label="Сила параллакса фото" value={t.parallax} min={0} max={14} step={1} onChange={(v)=>setTweak('parallax',v)} />
+      <TweakSlider label="Растворение низа в блок 2" value={t.fade} min={0} max={40} step={2} unit="%" onChange={(v)=>setTweak('fade',v)} />
+      <TweakSlider label="Подложка под текстом (затемнение)" value={t.textbg} min={0} max={40} step={2} unit="%" onChange={(v)=>setTweak('textbg',v)} />
+      <TweakSection label="Блок 2 — цвет фона" />
+      <div style={{display:'flex',gap:10,alignItems:'center',padding:'2px 2px 8px'}}>
+        <input type="color" value={t.sky} onChange={e=>setTweak('sky',e.target.value)}
+          style={{width:48,height:36,border:'none',borderRadius:9,background:'none',cursor:'pointer',padding:0,flexShrink:0}} />
+        <input type="text" value={t.sky} spellCheck="false" onChange={e=>{let v=e.target.value.trim();if(v&&v[0]!=='#')v='#'+v;setTweak('sky',v);}}
+          style={{flex:1,minWidth:0,fontFamily:'monospace',fontSize:14,letterSpacing:'.04em',padding:'9px 12px',borderRadius:9,border:'1px solid rgba(0,0,0,.18)',background:'#fff',color:'#222',textTransform:'uppercase'}} />
+      </div>
+      <div style={{display:'flex',gap:7,padding:'0 2px 6px',flexWrap:'wrap'}}>
+        {SKY_PRESETS.map(c=>(
+          <button key={c} title={c} onClick={()=>setTweak('sky',c)}
+            style={{width:28,height:28,borderRadius:8,cursor:'pointer',background:c,
+              border:t.sky.toLowerCase()===c.toLowerCase()?'2px solid #222':'1px solid rgba(0,0,0,.22)'}} />
+        ))}
+      </div>
+      <TweakSection label="Блок 2 — переход с моря" />
+      <ColorRow value={t.sea} onChange={v=>setTweak('sea',v)} presets={SEA_PRESETS} />
+      <TweakSlider label="Длина морского перехода" value={t.seah} min={0} max={90} step={2} unit="vh" onChange={(v)=>setTweak('seah',v)} />
+      <TweakSection label="Блок «Контакты» — фон" />
+      <ColorRow value={t.cbg} onChange={v=>setTweak('cbg',v)} presets={CBG_PRESETS} />
+      <TweakSection label="Контакты — цвет заголовка" />
+      <ColorRow value={t.ch} onChange={v=>setTweak('ch',v)} presets={CH_PRESETS} />
+      <TweakSection label="Контакты — цвет «изменить»" />
+      <ColorRow value={t.cem} onChange={v=>setTweak('cem',v)} presets={CEM_PRESETS} />
+      <TweakSection label="Контакты — цвет иконок" />
+      <ColorRow value={t.cic} onChange={v=>setTweak('cic',v)} presets={CACCENT_PRESETS} />
+      <TweakSection label="Контакты — цвет кнопки" />
+      <ColorRow value={t.cbtn} onChange={v=>setTweak('cbtn',v)} presets={CACCENT_PRESETS} />
+      <TweakSection label="Контакты — медовая вуаль сверху" />
+      <ColorRow value={t.veilCol} onChange={v=>setTweak('veilCol',v)} presets={VEIL_PRESETS} />
+      <TweakSlider label="Интенсивность вуали" value={t.veilInt} min={0} max={100} step={5} unit="%" onChange={(v)=>setTweak('veilInt',v)} />
+      <TweakSlider label="Толщина вуали" value={t.veilH} min={4} max={50} step={2} unit="%" onChange={(v)=>setTweak('veilH',v)} />
+      <TweakSection label="Контакты — сдвиг карточки вправо" />
+      <TweakSlider label="Сдвиг карточки" value={t.cardX} min={0} max={26} step={1} unit="vw" onChange={(v)=>setTweak('cardX',v)} />
+      <TweakSlider label="Сдвиг карточки по вертикали" value={t.cardY} min={-10} max={24} step={1} unit="vh" onChange={(v)=>setTweak('cardY',v)} />
+    </TweaksPanel>
+  );
+}
+ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<App/>);
+
+const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // failsafe: контент hero всегда станет видимым (на случай заморозки анимаций при экспорте/захвате)
 (function(){
@@ -636,7 +759,7 @@ document.getElementById('navLinks').addEventListener('click',e=>{if(e.target.tag
 const heroImg=document.getElementById('heroImg');
 const hero=document.getElementById('hero');
 const aboutSec=document.getElementById('about');
-window.__heroParallax=6;window.__seaH=2;window.__seaCol='#3a7397';
+window.__heroParallax=6;
 let ticking=false;
 function frame(){
   const y=window.scrollY;
@@ -757,7 +880,6 @@ checkReveal();setTimeout(checkReveal,300);
   ba.addEventListener('touchstart',down,{passive:true});
   window.addEventListener('touchmove',move,{passive:true});
   window.addEventListener('touchend',up);
-})();
 })();
 </script>
 <script src="sections.js"></script>
