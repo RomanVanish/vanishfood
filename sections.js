@@ -200,6 +200,7 @@
         console.warn('LEAD_ENDPOINT не задан — заявка никуда не отправлена. Вставь ссылку функции в sections.js.');
         document.getElementById('formBody').style.display='none';
         document.getElementById('formSuccess').classList.add('show');
+        var fc0=form.closest('.form-card');if(fc0)fc0.classList.add('sent');
         return;
       }
 
@@ -215,6 +216,7 @@
       }).then(function(){
         document.getElementById('formBody').style.display='none';
         document.getElementById('formSuccess').classList.add('show');
+        var fc=form.closest('.form-card');if(fc)fc.classList.add('sent');
       }).catch(function(err){
         console.error('Отправка заявки не удалась:',err);
         if(submitBtn){submitBtn.disabled=false;submitBtn.innerHTML=btnHtml;}
