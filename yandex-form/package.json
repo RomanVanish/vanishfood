@@ -1,0 +1,6 @@
+{
+  "name": "lead-form-postbox",
+  "version": "1.0.0",
+  "description": "Приём заявки с лендинга и отправка письма через Yandex Cloud Postbox",
+  "main": "index.js"
+}

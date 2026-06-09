@@ -392,6 +392,59 @@
   .burger{display:none;background:none;border:none;cursor:pointer;padding:8px;}
   .burger span{display:block;width:26px;height:2px;background:#fff;margin:6px 0;border-radius:2px;transition:.3s;}
   .nav.scrolled .burger span{background:var(--ink);}
+  /* бургер → ✕ при открытом меню */
+  html.mm-open .burger span{background:var(--ink);}
+  html.mm-open .burger span:nth-child(1){transform:translateY(8px) rotate(45deg);}
+  html.mm-open .burger span:nth-child(2){opacity:0;}
+  html.mm-open .burger span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
+  html.mm-open .brand{color:var(--ink);}
+  html.mm-open,html.mm-open body{overflow:hidden;}
+
+  /* ===================== ПОЛНОЭКРАННОЕ МОБИЛЬНОЕ МЕНЮ ===================== */
+  .mobile-menu{display:none;position:fixed;inset:0;z-index:50;background:var(--cream);
+    opacity:0;visibility:hidden;pointer-events:none;transition:opacity .34s ease,visibility .34s ease;}
+  html.mm-open .mobile-menu{opacity:1;visibility:visible;pointer-events:auto;}
+  .mm-inner{height:100%;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    padding:calc(env(safe-area-inset-top,0px) + 98px) clamp(28px,7vw,56px) calc(env(safe-area-inset-bottom,0px) + 30px);}
+  .mm-links{list-style:none;margin:0;padding:0;flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;}
+  .mm-links li{border-top:1px solid rgba(34,51,47,.14);}
+  .mm-links li:last-child{border-bottom:1px solid rgba(34,51,47,.14);}
+  .mm-links a{display:flex;align-items:center;justify-content:space-between;gap:14px;text-decoration:none;
+    font-family:var(--display);font-weight:600;font-size:clamp(2rem,8.2vw,2.6rem);color:var(--ink);
+    line-height:1;padding:clamp(15px,3.3vh,24px) 4px;}
+  .mm-links a::after{content:'›';font-family:var(--body);font-weight:400;font-size:.72em;color:var(--terra);opacity:.5;}
+  .mm-links a:active{color:var(--terra);}
+  .mm-foot{flex-shrink:0;padding-top:24px;display:flex;flex-direction:column;gap:16px;}
+  .mm-cta{display:block;text-align:center;background:var(--terra);color:var(--cream)!important;text-decoration:none;
+    font-family:var(--body);font-weight:600;font-size:1.05rem;padding:17px;border-radius:100px;
+    box-shadow:0 16px 38px -16px rgba(194,96,60,.6);}
+  .mm-social{display:flex;justify-content:center;gap:13px;}
+  .mm-social a{width:46px;height:46px;border-radius:50%;border:1px solid rgba(34,51,47,.18);text-decoration:none;
+    display:grid;place-items:center;color:var(--ink);font-size:1.1rem;}
+  .mm-social svg{width:21px;height:21px;display:block;}
+  @media (prefers-reduced-motion:no-preference){
+    .mm-links li,.mm-foot{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease;}
+    html.mm-open .mm-links li,html.mm-open .mm-foot{opacity:1;transform:none;}
+    html.mm-open .mm-links li:nth-child(1){transition-delay:.08s}
+    html.mm-open .mm-links li:nth-child(2){transition-delay:.14s}
+    html.mm-open .mm-links li:nth-child(3){transition-delay:.20s}
+    html.mm-open .mm-links li:nth-child(4){transition-delay:.26s}
+    html.mm-open .mm-links li:nth-child(5){transition-delay:.32s}
+    html.mm-open .mm-foot{transition-delay:.40s}
+  }
+  /* альбомная ориентация телефона — низкая высота: компактнее, 2 колонки + скролл */
+  @media (orientation:landscape) and (max-height:560px){
+    .mm-inner{padding-top:calc(env(safe-area-inset-top,0px) + 78px);padding-bottom:12px;}
+    .mm-links{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;align-content:start;
+      column-gap:clamp(22px,6vw,56px);}
+    .mm-links li{border-top:none;border-bottom:1px solid rgba(34,51,47,.14);}
+    .mm-links a{font-size:clamp(1.2rem,4.6vh,1.6rem);padding:clamp(7px,1.9vh,12px) 4px;}
+    .mm-foot{flex-direction:row;align-items:center;gap:12px;padding-top:12px;}
+    .mm-cta{flex:1 1 auto;padding:11px;font-size:.95rem;}
+    .mm-social{flex:0 0 auto;gap:10px;}
+    .mm-social a{width:38px;height:38px;}
+    .mm-social svg{width:18px;height:18px;}
+  }
 
   /* ===================== HERO — ровно в высоту экрана, без скролла и зума ===================== */
   .hero{position:relative;height:100svh;min-height:560px;display:flex;align-items:center;overflow:hidden;
@@ -432,6 +485,7 @@
   .hero-msgs{display:inline-flex;align-items:center;gap:11px;}
   .hero-msgs a{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:1.5px solid rgba(255,255,255,.45);color:#fff;text-decoration:none;font-size:1.05rem;transition:.2s;}
   .hero-msgs a:hover{background:#fff;color:var(--ink);border-color:#fff;}
+  .hero-msgs a svg{width:21px;height:21px;display:block;}
 
   .hero-trust{display:inline-flex;margin-top:30px;gap:0;background:rgba(13,30,39,.42);backdrop-filter:blur(7px);
     border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:16px 26px;box-shadow:0 24px 50px -28px rgba(10,28,36,.7);}
@@ -517,9 +571,7 @@
   @media (max-width:980px){
     .nav-links,.nav-cta{display:none;}
     .burger{display:block;}
-    .nav.mobile-open .nav-links{display:flex;flex-direction:column;align-items:stretch;position:absolute;top:100%;left:0;right:0;
-      background:var(--cream);padding:12px;gap:2px;box-shadow:0 20px 40px -20px rgba(34,51,47,.4);}
-    .nav.mobile-open .nav-links a{color:var(--ink);padding:14px 16px;text-shadow:none;}
+    .mobile-menu{display:block;}
     .hero-img{object-position:68% 50%;}
     .hero-scrim{background:linear-gradient(8deg,rgba(16,38,48,.88) 0%,rgba(16,38,48,.5) 42%,transparent 74%);}
     .about-grid{grid-template-columns:1fr;grid-template-rows:auto;grid-template-areas:"head" "visual" "body";row-gap:clamp(26px,5vw,40px);}
@@ -680,8 +732,30 @@
     <li><a href="#contact">Запись</a></li>
   </ul>
   <a href="#contact" class="nav-cta">Бесплатная консультация</a>
-  <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+  <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
 </nav>
+
+<!-- ПОЛНОЭКРАННОЕ МОБИЛЬНОЕ МЕНЮ -->
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <nav class="mm-inner" aria-label="Мобильное меню">
+    <ul class="mm-links">
+      <li><a href="#about">Обо мне</a></li>
+      <li><a href="#results">Результаты</a></li>
+      <li><a href="#system">Система</a></li>
+      <li><a href="#process">Как работаю</a></li>
+      <li><a href="#contact">Запись</a></li>
+    </ul>
+    <div class="mm-foot">
+      <a href="#contact" class="mm-cta">Бесплатная консультация</a>
+      <div class="mm-social">
+        <a href="https://t.me/Vanish_food" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.94 4.3 18.9 19.06c-.23 1.02-.84 1.27-1.69.79l-4.64-3.42-2.24 2.16c-.25.25-.45.45-.93.45l.33-4.72L18.6 6.4c.37-.33-.08-.51-.57-.18L6.9 13.4l-4.6-1.44c-1-.31-1.02-1 .22-1.49L20.6 3.04c.83-.31 1.56.2 1.34 1.26Z"/></svg></a>
+        <a href="https://wa.me/79213713659" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.74-.86-2.01-.96-.27-.1-.47-.15-.66.15-.2.3-.76.96-.93 1.15-.17.2-.34.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.34.45-.51.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.66-1.6-.91-2.19-.24-.57-.48-.5-.66-.5l-.56-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.06 2.87 1.21 3.07.15.2 2.09 3.2 5.07 4.49.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.08 1.74-.71 1.99-1.4.24-.69.24-1.28.17-1.4-.07-.12-.27-.2-.57-.35M12.04 21.5h-.01a9.5 9.5 0 0 1-4.83-1.32l-.35-.21-3.59.94.96-3.5-.23-.36a9.46 9.46 0 0 1-1.45-5.05c0-5.23 4.26-9.49 9.5-9.49 2.54 0 4.92.99 6.72 2.78a9.43 9.43 0 0 1 2.78 6.72c0 5.23-4.26 9.49-9.49 9.49M20.52 3.45A11.43 11.43 0 0 0 12.04 0C5.5 0 .17 5.33.17 11.88c0 2.09.55 4.14 1.59 5.94L.07 24l6.33-1.66a11.86 11.86 0 0 0 5.64 1.44h.01c6.54 0 11.87-5.33 11.87-11.88 0-3.17-1.24-6.15-3.48-8.4Z"/></svg></a>
+        <a href="tel:+79213713659" aria-label="Позвонить" title="Позвонить +7 921 371-36-59"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/></svg></a>
+        <a href="https://vk.com/vanish_food" target="_blank" rel="noopener" aria-label="ВКонтакте" title="ВКонтакте">VK</a>
+      </div>
+    </div>
+  </nav>
+</div>
 
 <!-- HERO -->
 <section class="hero" id="hero" data-screen-label="Hero" data-bg="sky">
@@ -702,8 +776,8 @@
         <div class="hero-actions hero-anim a4">
           <a href="#contact" class="btn btn-pulse">Бесплатная консультация <span class="ar">→</span></a>
           <span class="hero-msgs">
-            <a href="#" title="Telegram">✈</a>
-            <a href="#" title="WhatsApp">✆</a>
+            <a href="https://t.me/Vanish_food" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.94 4.3 18.9 19.06c-.23 1.02-.84 1.27-1.69.79l-4.64-3.42-2.24 2.16c-.25.25-.45.45-.93.45l.33-4.72L18.6 6.4c.37-.33-.08-.51-.57-.18L6.9 13.4l-4.6-1.44c-1-.31-1.02-1 .22-1.49L20.6 3.04c.83-.31 1.56.2 1.34 1.26Z"/></svg></a>
+            <a href="https://wa.me/79213713659" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.74-.86-2.01-.96-.27-.1-.47-.15-.66.15-.2.3-.76.96-.93 1.15-.17.2-.34.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.34.45-.51.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.66-1.6-.91-2.19-.24-.57-.48-.5-.66-.5l-.56-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.06 2.87 1.21 3.07.15.2 2.09 3.2 5.07 4.49.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.08 1.74-.71 1.99-1.4.24-.69.24-1.28.17-1.4-.07-.12-.27-.2-.57-.35M12.04 21.5h-.01a9.5 9.5 0 0 1-4.83-1.32l-.35-.21-3.59.94.96-3.5-.23-.36a9.46 9.46 0 0 1-1.45-5.05c0-5.23 4.26-9.49 9.5-9.49 2.54 0 4.92.99 6.72 2.78a9.43 9.43 0 0 1 2.78 6.72c0 5.23-4.26 9.49-9.49 9.49M20.52 3.45A11.43 11.43 0 0 0 12.04 0C5.5 0 .17 5.33.17 11.88c0 2.09.55 4.14 1.59 5.94L.07 24l6.33-1.66a11.86 11.86 0 0 0 5.64 1.44h.01c6.54 0 11.87-5.33 11.87-11.88 0-3.17-1.24-6.15-3.48-8.4Z"/></svg></a>
           </span>
         </div>
         <div class="hero-stats-m hero-anim a5">−22 кг <i>·</i> 9 лет практики <i>·</i> 300+ клиентов</div>
@@ -932,10 +1006,10 @@
     <div class="contact-direct reveal d1">
       <span class="cd-label">Удобнее написать напрямую?</span>
       <div class="cd-icons">
-        <a href="#" class="cd-ic" aria-label="WhatsApp" title="WhatsApp">✆</a>
-        <a href="#" class="cd-ic" aria-label="Telegram" title="Telegram">✈</a>
+        <a href="https://wa.me/79213713659" target="_blank" rel="noopener" class="cd-ic" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.47 14.38c-.3-.15-1.74-.86-2.01-.96-.27-.1-.47-.15-.66.15-.2.3-.76.96-.93 1.15-.17.2-.34.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.61.13-.13.3-.34.45-.51.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.66-1.6-.91-2.19-.24-.57-.48-.5-.66-.5l-.56-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.06 2.87 1.21 3.07.15.2 2.09 3.2 5.07 4.49.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.08 1.74-.71 1.99-1.4.24-.69.24-1.28.17-1.4-.07-.12-.27-.2-.57-.35M12.04 21.5h-.01a9.5 9.5 0 0 1-4.83-1.32l-.35-.21-3.59.94.96-3.5-.23-.36a9.46 9.46 0 0 1-1.45-5.05c0-5.23 4.26-9.49 9.5-9.49 2.54 0 4.92.99 6.72 2.78a9.43 9.43 0 0 1 2.78 6.72c0 5.23-4.26 9.49-9.49 9.49M20.52 3.45A11.43 11.43 0 0 0 12.04 0C5.5 0 .17 5.33.17 11.88c0 2.09.55 4.14 1.59 5.94L.07 24l6.33-1.66a11.86 11.86 0 0 0 5.64 1.44h.01c6.54 0 11.87-5.33 11.87-11.88 0-3.17-1.24-6.15-3.48-8.4Z"/></svg></a>
+        <a href="https://t.me/Vanish_food" target="_blank" rel="noopener" class="cd-ic" aria-label="Telegram" title="Telegram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.94 4.3 18.9 19.06c-.23 1.02-.84 1.27-1.69.79l-4.64-3.42-2.24 2.16c-.25.25-.45.45-.93.45l.33-4.72L18.6 6.4c.37-.33-.08-.51-.57-.18L6.9 13.4l-4.6-1.44c-1-.31-1.02-1 .22-1.49L20.6 3.04c.83-.31 1.56.2 1.34 1.26Z"/></svg></a>
+        <a href="tel:+79213713659" class="cd-ic" aria-label="Позвонить" title="Позвонить +7 921 371-36-59"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/></svg></a>
         <a href="https://vk.com/vanish_food" target="_blank" rel="noopener" class="cd-ic" aria-label="ВКонтакте" title="ВКонтакте">VK</a>
-        <a href="tel:+70000000000" class="cd-ic" aria-label="Телефон" title="Телефон">☎</a>
       </div>
     </div>
   </div>
@@ -966,8 +1040,16 @@ const prefersReduced=window.matchMedia('(prefers-reduced-motion: reduce)').match
   setTimeout(()=>els.forEach(el=>{el.style.opacity='1';el.style.transform='none';}),2600);
 })();
 const nav=document.getElementById('nav');
-document.getElementById('burger').addEventListener('click',()=>nav.classList.toggle('mobile-open'));
-document.getElementById('navLinks').addEventListener('click',e=>{if(e.target.tagName==='A')nav.classList.remove('mobile-open');});
+const burger=document.getElementById('burger');
+const mobileMenu=document.getElementById('mobileMenu');
+function setMenu(open){
+  document.documentElement.classList.toggle('mm-open',open);
+  burger.setAttribute('aria-expanded',open?'true':'false');
+  mobileMenu.setAttribute('aria-hidden',open?'false':'true');
+}
+burger.addEventListener('click',()=>setMenu(!document.documentElement.classList.contains('mm-open')));
+mobileMenu.addEventListener('click',e=>{if(e.target.closest('a'))setMenu(false);});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false);});
 
 // параллакс: фото смещается вверх медленнее, низ прикрыт fade в цвет блока 2 (без зума/зазоров)
 const heroImg=document.getElementById('heroImg');
